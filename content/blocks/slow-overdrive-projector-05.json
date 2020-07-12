@@ -1,0 +1,17 @@
+{
+    "health": 1,
+    "size": 2,
+    "range": 120,
+    "hasPower": false,
+    "breakable": false,
+    "targetable": false,
+    "solid": false,
+    "speedBoostPhase": -0.25,
+    "phaseRangeBoost": 0,
+    "useTime": 100000,
+    "speedBoost": 0.5,
+    "consumes": {},
+    "requirements": [],
+    "category": "effect",
+    "research": "ultra-overdrive"
+}
