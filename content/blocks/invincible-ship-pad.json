@@ -1,0 +1,12 @@
+{
+    "size": 2,
+    "health": 1,
+    "buildTime": 6,
+    "hasPower": false,
+    "consumes": {
+    },
+    "requirements": [
+    ],
+    "category": "upgrade",
+    "research": "cheat-power"
+}

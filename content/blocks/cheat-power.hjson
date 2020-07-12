@@ -1,0 +1,6 @@
+// type: PowerSource
+category: power
+laserRange: 100
+maxNodes: 500
+requirements: []
+research: cheat-liquid

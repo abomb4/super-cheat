@@ -1,0 +1,12 @@
+{
+    "size": 3,
+    "hasItems": true,
+    "unloadable": true,
+    "breakable": true,
+    "rebuildable": false,
+    "health": 1,
+    "itemCapacity": 100000,
+    "requirements": [],
+    "category": "effect",
+    "research": "cheat-item"
+}

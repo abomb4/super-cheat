@@ -1,0 +1,11 @@
+{
+    "health": 1,
+    "size": 3,
+    "solid": false,
+    "consumes": {
+    },
+    "requirements": [
+    ],
+    "category": "effect",
+    "research": "enemys-control"
+}

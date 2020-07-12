@@ -1,0 +1,8 @@
+itemCapacity: 100000000
+hasItems: true
+health: 1
+size: 6
+requirements: [
+]
+category: effect
+research: invincible-core

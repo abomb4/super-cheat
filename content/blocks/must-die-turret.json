@@ -1,0 +1,12 @@
+{
+    "category": "turret",
+    "health": 50000,
+    "reload": 10,
+    "range": 500,
+    "inaccuracy": 25,
+    "rotatespeed": 20,
+    "targetInterval": 0,
+    "shootCone": 80,
+    "requirements": [],
+    "research": "cheat-power"
+}

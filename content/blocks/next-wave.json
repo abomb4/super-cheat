@@ -1,0 +1,13 @@
+{
+  "size": 2,
+  "update": true,
+  "solid": false,
+  "targetable": false,
+  "hasItems": false,
+  "configurable": true,
+  "category": "turret",
+  "consumes": {
+  },
+  "requirements": [],
+  "research": "cheat-power"
+}
