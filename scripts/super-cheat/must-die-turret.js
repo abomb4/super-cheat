@@ -34,7 +34,7 @@ const destoryBeamBulletType = (() => {
                 this.speed = 3.5;
                 this.damage = Infinity;
                 this.homingPower = 25;
-                this.homingRange = 50;
+                this.homingRange = 80;
                 this.splashDamage = 3;
                 this.splashDamageRadius = 10;
                 this.hitEffect = hitEffect;
@@ -66,7 +66,7 @@ const destoryBeamBulletType = (() => {
                 // if (b.timer.get(1, 1)) {
                 //     Effects.effect(tailEffect, THE_COLOR, b.x, b.y, b.rot());
                 // }
-                if (this.homingPower > 0.0001) {
+                if (this.homingPower > 0.0001 && b.time() > 5) {
                     var target = Units.closestTarget(b.getTeam(), b.x, b.y, this.homingRange, boolf(e => !e.isFlying() || this.collidesAir));
                     if (target != null) {
                         b.velocity().setAngle(Mathf.slerpDelta(b.velocity().angle(), b.angleTo(target), 0.2));
