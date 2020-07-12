@@ -147,6 +147,112 @@ const globalLancerMechShield = (() => {
     };
 })();
 
+const healLaser = (() => {
+    const LASER_COLOR = Color.purple;
+    const colors = [LASER_COLOR.cpy().mul(1, 1, 1, 0.4), LASER_COLOR, LASER_COLOR];
+    const tscales = [1, 0.7, 0.5, 0.2];
+    const strokes = [2, 1.5, 1, 0.3];
+    const lenscales = [1, 1.1, 1.13, 1.17];
+    const length = 160;
+
+    const shootEffect = newEffect(12, e => {
+        Draw.color(LASER_COLOR);
+        const signs = Mathf.signs;
+        for(var i in signs){
+            var num = signs[i];
+            Drawf.tri(e.x, e.y, 4 * e.fout(), 18, e.rotation + 100 * num);
+        }
+    });
+
+    const shootSmokeEffect = newEffect(12, e => {
+        Draw.color(LASER_COLOR);
+        Fill.circle(e.x, e.y, e.fout() * 4);
+    });
+
+    const bt = extend(BasicBulletType, {
+        init(b) {
+            if (b) {
+                Damage.collideLine(b, b.getTeam(), this.hitEffect, b.x, b.y, b.rot(), length);
+
+                // try heal friend tiles
+                const large = true;
+                var tr = new Vec2();
+                tr.trns(b.rot(), length);
+                var collidedBlocks = new IntSet();
+                var collider = new Intc2({
+                    get: (cx, cy) => {
+                        var tile = Vars.world.ltile(cx, cy);
+
+                        if (tile != null && tile.entity != null && tile.getTeam() == b.getTeam() && tile.entity.maxHealth() != tile.entity.health && (tile.block() != BuildBlock)) {
+                            Effects.effect(Fx.healBlockFull, LASER_COLOR, tile.drawx(), tile.drawy(), tile.block().size);
+                            tile.entity.healBy(this.healPercent / 100 * tile.entity.maxHealth());
+                        }
+                        if (tile != null && !collidedBlocks.contains(tile.pos()) && tile.entity != null && tile.getTeamID() != b.getTeam().id && tile.entity.collide(b)) {
+                            tile.entity.collision(b);
+                            collidedBlocks.add(tile.pos());
+                            if (tile) {
+                                Call.onTileDestroyed(tile);
+                            }
+                        }
+                    }
+                });
+
+                Vars.world.raycastEachWorld(b.x, b.y, b.x + tr.x, b.y + tr.y, new World.Raycaster({
+                    accept: (cx, cy) => {
+                        collider.get(cx, cy);
+                        if (large) {
+                            for (var i in Geometry.d4) {
+                                var p = Geometry.d4[i];
+                                collider.get(cx + p.x, cy + p.y);
+                            }
+                        }
+                        return false;
+                    }
+                }));
+            }
+        },
+        hitTile(b, tile) {
+            this.super$hitTile(b, tile);
+            if (tile && tile.ent()) {
+                Call.onTileDestroyed(tile);
+            }
+        },
+        range() {
+            return length;
+        },
+        draw(b) {
+            const f = Mathf.curve(b.fin(), 0, 0.2);
+            const baseLen = length * f;
+
+            Lines.lineAngle(b.x, b.y, b.rot(), baseLen);
+            for (var s = 0; s < 3; s++) {
+                Draw.color(colors[s]);
+                for (var i = 0; i < tscales.length; i++) {
+                    Lines.stroke(7 * b.fout() * (s == 0 ? 1.5 : s == 1 ? 1 : 0.3) * tscales[i]);
+                    Lines.lineAngle(b.x, b.y, b.rot(), baseLen * lenscales[i]);
+                }
+            }
+            Draw.reset();
+        },
+    });
+
+    bt.healPercent = 5000;
+    bt.hitEffect = Fx.hitLancer;
+    bt.despawnEffect = Fx.none;
+    bt.speed = 0.01;
+    bt.hitSize = 4;
+    bt.drawSize = 420;
+    bt.damage = Infinity;
+    bt.lifetime = 16;
+    bt.pierce = true;
+    bt.keepVelocity = false;
+    bt.collidesTiles = false;
+    bt.shootEffect = shootEffect;
+    bt.smokeEffect = shootSmokeEffect;
+
+    return bt;
+})();
+
 const invincibleBulletType = (() => {
 
     const bt = extend(BasicBulletType, {
@@ -154,6 +260,13 @@ const invincibleBulletType = (() => {
             this.super$hitTile(b, tile);
             if (tile && tile.ent()) {
                 Call.onTileDestroyed(tile);
+            }
+        },
+        init(b) {
+            if (b) {
+                this.super$init(b);
+                const angle = b.velocity().angle();
+                Bullet.create(healLaser, b, b.getTeam(), b.x + Angles.trnsx(angle, 4), b.y + Angles.trnsy(angle, 4), angle, 1, 1);
             }
         },
     });
@@ -164,9 +277,10 @@ const invincibleBulletType = (() => {
     bt.speed = 4;
     bt.bulletWidth = 7;
     bt.bulletHeight = 9;
-    bt.lifetime = 100;
+    bt.lifetime = 180;
     bt.inaccuracy = 5;
     bt.despawnEffect = Fx.hitBulletSmall;
+    bt.keepVelocity = false;
     return bt;
 })();
 
@@ -226,10 +340,12 @@ const mech = (() => {
                     Effects.effect(Fx.healWave, player);
                 }
             }
+
         },
         draw(player) {
             var shield = globalLancerMechShield.getShield(player, false);
             shield.draw();
+            Vars.renderer.lights.add(player.x, player.y, 400, Color.valueOf("ffffff"), 1);
         }
     });
 
@@ -256,8 +372,8 @@ const mech = (() => {
     m.drawLight = true;
     m.engineOffset = 5;
     m.engineSize = 3;
-    m.weaponOffsetY = -2;
-    m.weaponOffsetX = 5;
+    // m.weaponOffsetY = -2;
+    // m.weaponOffsetX = 5;
 
     return m;
 })();

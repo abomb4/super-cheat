@@ -31,7 +31,7 @@ const destoryBeamBulletType = (() => {
             load() {
                 this.super$load();
                 this.healPercent = 500;
-                this.speed = 3;
+                this.speed = 3.5;
                 this.damage = Infinity;
                 this.homingPower = 25;
                 this.homingRange = 50;
@@ -39,7 +39,7 @@ const destoryBeamBulletType = (() => {
                 this.splashDamageRadius = 10;
                 this.hitEffect = hitEffect;
                 this.despawnEffect = despawnEffect;
-                this.lifetime = 30;
+                this.lifetime = 35;
                 this.shootEffect = Fx.none;
             },
             collides(b, tile){
@@ -120,7 +120,7 @@ const destoryBeamBulletType = (() => {
             this.despawnEffect = despawnEffect;
             this.fragBullet = fragBulletType;
             this.fragBullets = 6;
-            this.lifetime = 90;
+            this.lifetime = 110;
         },
         hitTile(b, tile) {
             this.super$hitTile(b, tile);
