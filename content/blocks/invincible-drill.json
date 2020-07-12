@@ -1,0 +1,25 @@
+{
+    "size": 1,
+    "health": 1,
+    "tier": 2147483647,
+    "drillTime": 1,
+    "hardnessDrillMultiplier": 0,
+    "liquidBoostIntensity": 2,
+    "warmupSpeed": 30,
+    "drillEffect": "none",
+    "updateEffect": "none",
+    "rotateSpeed": 8,
+    "consumes": {
+        "liquid": {
+            "liquid": "water",
+            "amount": 0.01,
+            "booster": true,
+            "optional": true
+        }
+    },
+    "itemCapacity": 1000000,
+    "liquidCapacity": 1,
+    "requirements": [],
+    "category": "production",
+    "research": "cheat-item"
+}
