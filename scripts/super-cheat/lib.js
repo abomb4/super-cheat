@@ -55,3 +55,17 @@ exports.playerShield = (() => {
 exports.loadRegion = function(name) {
     return Core.atlas.find(exports.aModName + '-' + name, Core.atlas.find("clear"))
 }
+
+// Die
+exports.dieEffect = new JavaAdapter(StatusEffect, {
+    load() {
+        this.effect = Fx.none;
+        this.super$load();
+    },
+    update(unit, time) {
+        unit.kill();
+        if (!unit.isDead()) {
+            unit.remove();
+        }
+    }
+}, "die");

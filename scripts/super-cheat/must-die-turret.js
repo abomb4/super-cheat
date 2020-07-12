@@ -81,7 +81,13 @@ const destoryBeamBulletType = (() => {
                     Effects.effect(Fx.healBlockFull, THE_COLOR, tile.drawx(), tile.drawy(), tile.block().size);
                     tile.entity.healBy(this.healPercent / 100 * tile.entity.maxHealth());
                 }
-            }
+            },
+            hit(b, x, y) {
+                x = x ? x : b.x;
+                y = y ? y : b.y;
+                Units.closestEnemy(b.team, x, y, this.splashDamageRadius, boolf(unit => { unit.kill(); return false; }));
+                this.super$hit(b, x, y);
+            },
         });
         return bt;
     })();
@@ -127,6 +133,12 @@ const destoryBeamBulletType = (() => {
             if (tile && tile.ent() && tile.getTeam() != b.getTeam()) {
                 Call.onTileDestroyed(tile);
             }
+        },
+        hit(b, x, y) {
+            x = x ? x : b.x;
+            y = y ? y : b.y;
+            Units.closestEnemy(b.team, x, y, this.splashDamageRadius, boolf(unit => { unit.kill(); return false; }));
+            this.super$hit(b, x, y);
         },
         draw(b) {
             Draw.color(THE_COLOR);
