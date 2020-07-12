@@ -126,6 +126,7 @@ const destoryBeamBulletType = (() => {
             this.despawnEffect = despawnEffect;
             this.fragBullet = fragBulletType;
             this.fragBullets = 6;
+            this.fragVelocityMin = 0.6;
             this.lifetime = 110;
         },
         hitTile(b, tile) {
