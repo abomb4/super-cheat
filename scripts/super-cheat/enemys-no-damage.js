@@ -357,7 +357,7 @@ const blockType = extendContent(Block, "enemys-no-damage", {
     targetGroup() {
         return theEntityGroup;
     },
-    handleDamage(tile) { return 0; },
+    // handleDamage(tile) { return 0; },
 });
 blockType.update = true;
 blockType.consumes.item(Items.copper).boost();

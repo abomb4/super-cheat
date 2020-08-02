@@ -32,8 +32,8 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-01", {
             }
         }
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });
 
 extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
@@ -68,6 +68,6 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
             }
         }
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });

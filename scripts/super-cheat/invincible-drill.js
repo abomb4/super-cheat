@@ -39,6 +39,6 @@ extendContent(Drill, "invincible-drill", {
             this.super$offloadNear(tile, item);
         }
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });

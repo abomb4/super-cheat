@@ -7,8 +7,8 @@ extendContent(ItemSource, 'cheat-item', {
             }
         }
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });
 
 extendContent(LiquidSource, 'cheat-liquid', {
@@ -20,11 +20,14 @@ extendContent(LiquidSource, 'cheat-liquid', {
             }
         }
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });
 
 extendContent(PowerSource, 'cheat-power', {
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
+    getPowerProduction(tile) {
+        return 10000000;
+    }
 });

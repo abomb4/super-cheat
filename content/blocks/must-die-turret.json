@@ -1,6 +1,6 @@
 {
     "category": "turret",
-    "health": 50000,
+    "health": 6000,
     "reload": 10,
     "range": 500,
     "inaccuracy": 25,

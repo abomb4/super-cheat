@@ -153,7 +153,7 @@ const healLaser = (() => {
     const tscales = [1, 0.7, 0.5, 0.2];
     const strokes = [2, 1.5, 1, 0.3];
     const lenscales = [1, 1.1, 1.13, 1.17];
-    const length = 160;
+    const length = 50;
 
     const shootEffect = newEffect(12, e => {
         Draw.color(LASER_COLOR);
@@ -217,13 +217,6 @@ const healLaser = (() => {
                 Call.onTileDestroyed(tile);
             }
         },
-        hit(b, x, y) {
-            x = x ? x : b.x;
-            y = y ? y : b.y;
-            Units.closestEnemy(b.team, x, y, Math.max(1, this.splashDamageRadius), boolf(unit => { unit.kill(); return false; }));
-            this.super$hit(b, x, y);
-        },
-
         range() {
             return length;
         },
@@ -243,7 +236,6 @@ const healLaser = (() => {
         },
     });
 
-    bt.status = lib.dieEffect;
     bt.healPercent = 5000;
     bt.hitEffect = Fx.hitLancer;
     bt.despawnEffect = Fx.none;
@@ -277,12 +269,6 @@ const invincibleBulletType = (() => {
                 Bullet.create(healLaser, b, b.getTeam(), b.x + Angles.trnsx(angle, 4), b.y + Angles.trnsy(angle, 4), angle, 1, 1);
             }
         },
-        // hit(b, x, y) {
-        //     x = x ? x : b.x;
-        //     y = y ? y : b.y;
-        //     Units.closestEnemy(b.team, x, y, Math.max(1, this.splashDamageRadius), boolf(unit => { unit.kill(); return false; }));
-        //     this.super$hit(b, x, y);
-        // },
     });
 
     // bt.damage = 0;
@@ -291,11 +277,10 @@ const invincibleBulletType = (() => {
     bt.speed = 4;
     bt.bulletWidth = 7;
     bt.bulletHeight = 9;
-    bt.lifetime = 180;
+    bt.lifetime = 140;
     bt.inaccuracy = 5;
     bt.despawnEffect = Fx.hitBulletSmall;
     bt.keepVelocity = false;
-    bt.status = lib.dieEffect;
     return bt;
 })();
 

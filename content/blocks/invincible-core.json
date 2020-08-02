@@ -4,7 +4,7 @@
     "unloadable": true,
     "breakable": true,
     "rebuildable": false,
-    "health": 1,
+    "health": 1000,
     "itemCapacity": 100000,
     "requirements": [],
     "category": "effect",

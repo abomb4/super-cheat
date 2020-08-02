@@ -1,5 +1,5 @@
 {
-    "health": 1,
+    "health": 2000,
     "size": 3,
     "solid": true,
     "consumes": {

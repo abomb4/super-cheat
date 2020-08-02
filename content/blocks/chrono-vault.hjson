@@ -1,3 +1,5 @@
+
+health: 20000,
 itemCapacity: 100000000
 hasItems: true
 health: 1

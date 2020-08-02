@@ -34,7 +34,7 @@ const destoryBeamBulletType = (() => {
                 this.speed = 3.5;
                 this.damage = Infinity;
                 this.homingPower = 25;
-                this.homingRange = 80;
+                this.homingRange = 50;
                 this.splashDamage = 3;
                 this.splashDamageRadius = 10;
                 this.hitEffect = hitEffect;
@@ -66,7 +66,7 @@ const destoryBeamBulletType = (() => {
                 // if (b.timer.get(1, 1)) {
                 //     Effects.effect(tailEffect, THE_COLOR, b.x, b.y, b.rot());
                 // }
-                if (this.homingPower > 0.0001 && b.time() > 5) {
+                if (this.homingPower > 0.0001) {
                     var target = Units.closestTarget(b.getTeam(), b.x, b.y, this.homingRange, boolf(e => !e.isFlying() || this.collidesAir));
                     if (target != null) {
                         b.velocity().setAngle(Mathf.slerpDelta(b.velocity().angle(), b.angleTo(target), 0.2));
@@ -81,13 +81,7 @@ const destoryBeamBulletType = (() => {
                     Effects.effect(Fx.healBlockFull, THE_COLOR, tile.drawx(), tile.drawy(), tile.block().size);
                     tile.entity.healBy(this.healPercent / 100 * tile.entity.maxHealth());
                 }
-            },
-            hit(b, x, y) {
-                x = x ? x : b.x;
-                y = y ? y : b.y;
-                Units.closestEnemy(b.team, x, y, this.splashDamageRadius, boolf(unit => { unit.kill(); return false; }));
-                this.super$hit(b, x, y);
-            },
+            }
         });
         return bt;
     })();
@@ -126,7 +120,6 @@ const destoryBeamBulletType = (() => {
             this.despawnEffect = despawnEffect;
             this.fragBullet = fragBulletType;
             this.fragBullets = 6;
-            this.fragVelocityMin = 0.6;
             this.lifetime = 110;
         },
         hitTile(b, tile) {
@@ -134,12 +127,6 @@ const destoryBeamBulletType = (() => {
             if (tile && tile.ent() && tile.getTeam() != b.getTeam()) {
                 Call.onTileDestroyed(tile);
             }
-        },
-        hit(b, x, y) {
-            x = x ? x : b.x;
-            y = y ? y : b.y;
-            Units.closestEnemy(b.team, x, y, this.splashDamageRadius, boolf(unit => { unit.kill(); return false; }));
-            this.super$hit(b, x, y);
         },
         draw(b) {
             Draw.color(THE_COLOR);
@@ -199,8 +186,8 @@ const turret = extendContent(Turret, 'must-die-turret', {
     hasAmmo(tile) { return true; },
     peekAmmo(tile) { return this.shootType; },
     useAmmo(tile) { return this.shootType; },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });
 
 turret.shootType = destoryBeamBulletType;

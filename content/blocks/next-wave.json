@@ -1,5 +1,6 @@
 {
   "size": 2,
+  "health": 2000,
   "update": true,
   "solid": false,
   "targetable": false,

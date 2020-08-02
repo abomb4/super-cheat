@@ -20,6 +20,6 @@ extendContent(LaunchPad, "quantum-launchpad", {
             }
         }
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });

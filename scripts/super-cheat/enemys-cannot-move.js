@@ -356,8 +356,8 @@ const blockType = extendContent(Block, "enemys-cannot-move", {
     targetGroup() {
         return theEntityGroup;
     },
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
+    // handleDamage(tile, amount) { return 0; },
+    // handleBulletHit(entity, bullet) { },
 });
 blockType.update = true;
 blockType.consumes.item(Items.copper).boost();
