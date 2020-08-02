@@ -1,0 +1,9 @@
+{
+    "health": 2500,
+    "size": 2,
+    "hasPower": false,
+    "consumes": {},
+    "requirements": [],
+    "category": "effect",
+    "research": "ultra-overdrive"
+}
