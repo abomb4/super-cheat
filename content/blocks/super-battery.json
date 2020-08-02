@@ -1,0 +1,14 @@
+{
+    "type": "Battery",
+    "category": "power",
+    "BuildVisibility": "shown",
+    "size": 1,
+    "health": 1000,
+    "emptyLightColor": "aaffaa",
+    "fullLightColor": "#ff3eee",
+    "consumes": {
+        "powerBuffered": 1000000
+    },
+    "requirements": [],
+    "research": "cheat-power"
+}
