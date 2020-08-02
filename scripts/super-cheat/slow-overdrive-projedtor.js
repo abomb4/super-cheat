@@ -138,11 +138,14 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
     // 使用数组下标获取；存储的是乘以 100 的数字
     const commandMap = [1, 10, 100, 1000];
 
+    var lastNumber = 2;
 
     const range = 120;
     const reload = 30;
     const baseColor = Color.valueOf("feb380");
     const phaseColor = Color.valueOf("ff9ed5");
+
+    const INIT_MASK = 1000000;
 
     extendContent(Block, "adjustable-overdrive-projector", {
 
@@ -162,6 +165,10 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
             down4 = new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("down4"));
             this.super$load();
         },
+        playerPlaced(tile) {
+            // 算出最少需要多少次可以达到 lastNumber ，并发送指定次数个 configure
+            Core.app.post(run(() => tile.configure(lastNumber + INIT_MASK)));
+        },
         buildConfiguration(tile, table) {
             table.addImageButton(up1, Styles.clearTransi, run(() => { tile.configure(0) })).size(40)
             table.addImageButton(up2, Styles.clearTransi, run(() => { tile.configure(1) })).size(40)
@@ -175,15 +182,19 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
         },
         configured(tile, player, value) {
             const entity = tile.ent();
-            // 小于 100 视为减小命令
-            if (value >= 100) {
+            // 小于 100 视为减小命令，大于 1000000（七位数）视为初始化
+            if (value > INIT_MASK) {
+                entity.setSpeedTo(value - INIT_MASK);
+            } else if (value >= 100) {
                 var commandVal = commandMap[value - 100];
                 var result = Math.max(MIN, entity.getSpeedTo() - commandVal);
                 entity.setSpeedTo(result);
+                lastNumber = entity.getSpeedTo();
             } else {
                 var commandVal = commandMap[value];
                 var result = Math.min(MAX, entity.getSpeedTo() + commandVal);
                 entity.setSpeedTo(result);
+                lastNumber = entity.getSpeedTo();
             }
         },
         drawPlace(x, y, rotation, valid) {
