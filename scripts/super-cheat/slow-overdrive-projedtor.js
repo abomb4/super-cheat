@@ -138,7 +138,7 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
     // 使用数组下标获取；存储的是乘以 100 的数字
     const commandMap = [1, 10, 100, 1000];
 
-    var lastNumber = 2;
+    var lastNumber = 200;
 
     const range = 120;
     const reload = 30;
