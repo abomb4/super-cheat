@@ -1,21 +1,4 @@
 
-/**
- * 将某方块变成玩家己方
- *
- * @param {Unit} entity 一般是 tile.ent().target.entity
- */
-exports.mindControl = function (targetEntity) {
-    var typeName = targetEntity.getClass().getName();
-    if (typeName.endsWith("Unit")) {
-        var unit = targetEntity.getType().create(Vars.player.getTeam());
-        unit.set(targetEntity.x, targetEntity.y);
-        unit.add();
-        targetEntity.remove();
-    } else {
-        targetEntity.tile.setTeam(Vars.player.getTeam());
-    }
-}
-
 exports.loadSound = function (name, setter) {
     const params = new Packages.arc.assets.loaders.SoundLoader.SoundParameter();
     params.loadedCallback = new Packages.arc.assets.AssetLoaderParameters.LoadedCallback({
@@ -33,25 +16,29 @@ exports.loadSound = function (name, setter) {
     });
 }
 
-exports.forceProjectRender = function (render) {
-    const fakeTile = new Tile(0, 0);
-    const x = new JavaAdapter(ForceProjector.ShieldEntity, {
-        draw: function() { render() }
-    }, null, fakeTile)
-    return x;
-}
-
 exports.aModName = "invincible-cheat-mod";
 
-exports.playerShield = (() => {
-
-    function initPlayerShield(player) {
-    };
-    return {
-        update(player) {},
-    };
-})();
+exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 
 exports.loadRegion = function(name) {
     return Core.atlas.find(exports.aModName + '-' + name, Core.atlas.find("clear"))
+}
+
+/**
+ * @param {Block} blockType The block type
+ * @param {(block: Block) => Building} buildingCreator
+ *        A function receives block type, return Building instance;
+ *        don't use prov (this function will use prov once)
+ */
+exports.setBuilding = function(blockType, buildingCreator) {
+    blockType.buildType = prov(buildingCreator(blockType));
+}
+
+/**
+ * @param {Block} blockType The block type
+ * @param {Class<Building>} buildingType The building type
+ * @param {Object} overrides Object that as second parameter of extend()
+ */
+exports.setBuildingSimple = function(blockType, buildingType, overrides) {
+    blockType.buildType = prov(() => new JavaAdapter(buildingType, overrides, blockType));
 }

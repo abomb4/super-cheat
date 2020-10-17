@@ -1,33 +1,18 @@
-extendContent(ItemSource, 'cheat-item', {
-    tryDump(tile, item) {
-        if (item) {
-            tile.ent().items.set(item, 90000);
-            for (var i = 36; i > 0; i--) {
-                this.super$tryDump(tile, item);
-            }
+var lib = require('super-cheat/lib');
+
+var itemSource = extendContent(ItemSource, 'cheat-item', {});
+lib.setBuildingSimple(itemSource, ItemSource.ItemSourceBuild, {
+    dump(todump) {
+        var count = 36;
+        while (count > 0 && this.super$dump(todump)) {
+            count--;
         }
     },
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
 });
 
-extendContent(LiquidSource, 'cheat-liquid', {
-    tryDump(tile, item) {
-        if (item) {
-            tile.ent().items.set(item, 90000);
-            for (var i = 36; i > 0; i--) {
-                this.super$tryDump(tile, item);
-            }
-        }
-    },
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
-});
-
-extendContent(PowerSource, 'cheat-power', {
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
+var powerSource = extendContent(PowerSource, 'cheat-power', {});
+lib.setBuildingSimple(powerSource, PowerSource.PowerSourceBuild, {
     getPowerProduction(tile) {
-        return 10000000;
+        return this.enabled ? 10000000000 : 0;
     }
 });

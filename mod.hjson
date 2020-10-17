@@ -1,10 +1,10 @@
 name: "Invincible Cheat Mod"
-displayName: Invincible Cheat 无敌作弊
+displayName: (v6) Invincible Cheat 无敌作弊
 author: 滞人
 description: '''
 This is a [red]cheat[] mod, abuse will reduce your game experience, be careful for using this.
 
 这是个[red]作弊[] mod，会降低游戏体验，请谨慎使用。
 '''
-version: 1.6.2
-minGameVersion: 104
+version: 2.0.0
+minGameVersion: 108

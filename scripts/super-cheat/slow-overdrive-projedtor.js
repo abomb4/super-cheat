@@ -2,77 +2,6 @@
 const lib = require('super-cheat/lib');
 
 const healed = new IntSet();
-extendContent(OverdriveProjector, "slow-overdrive-projector-01", {
-
-    update(tile) {
-
-        const tilesize = Vars.tilesize;
-        const world = Vars.world;
-        const range = this.range;
-        const reload = this.reload;
-        const speedBoost = this.speedBoost;
-
-        var realRange = range;
-        var realBoost = speedBoost;
-
-        var tileRange = (realRange / tilesize + 1);
-        healed.clear();
-
-        for (var x = -tileRange + tile.x; x <= tileRange + tile.x; x++) {
-            for (var y = -tileRange + tile.y; y <= tileRange + tile.y; y++) {
-                if (!Mathf.within(x * tilesize, y * tilesize, tile.drawx(), tile.drawy(), realRange)) continue;
-
-                var other = world.ltile(x, y);
-
-                if (other == null) continue;
-
-                if (!healed.contains(other.pos()) && other.entity != null) {
-                    other.entity.timeScaleDuration = Math.max(other.entity.timeScaleDuration, reload + 1);
-                    other.entity.timeScale = Math.min(realBoost);
-                    healed.add(other.pos());
-                }
-            }
-        }
-    },
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
-});
-
-extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
-
-    update(tile) {
-
-        const tilesize = Vars.tilesize;
-        const world = Vars.world;
-        const range = this.range;
-        const reload = this.reload;
-        const speedBoost = this.speedBoost;
-
-        var realRange = range;
-        var realBoost = speedBoost;
-
-        var tileRange = (realRange / tilesize + 1);
-        healed.clear();
-
-        for (var x = -tileRange + tile.x; x <= tileRange + tile.x; x++) {
-            for (var y = -tileRange + tile.y; y <= tileRange + tile.y; y++) {
-                if (!Mathf.within(x * tilesize, y * tilesize, tile.drawx(), tile.drawy(), realRange)) continue;
-
-                var other = world.ltile(x, y);
-
-                if (other == null) continue;
-
-                if (!healed.contains(other.pos()) && other.entity != null) {
-                    other.entity.timeScaleDuration = Math.max(other.entity.timeScaleDuration, reload + 1);
-                    other.entity.timeScale = Math.min(realBoost);
-                    healed.add(other.pos());
-                }
-            }
-        }
-    },
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
-});
 
 (() => {
 
@@ -147,14 +76,9 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
 
     const INIT_MASK = 1000000;
 
-    extendContent(Block, "adjustable-overdrive-projector", {
+    var blockType = extendContent(OverdriveProjector, "adjustable-overdrive-projector", {
 
         load() {
-            this.entityType = provEntity;
-            this.update = true;
-            this.solid = true;
-            this.configurable = true;
-
             up1 =   new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up1"));
             up2 =   new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up2"));
             up3 =   new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up3"));
@@ -165,23 +89,32 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
             down4 = new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("down4"));
             this.super$load();
         },
+    });
+    blockType.update = true;
+    blockType.solid = true;
+    blockType.configurable = true;
+
+    lib.setBuildingSimple(blockType, OverdriveProjector.OverdriveBuild, {
+
+    });
+    extendContent(Block, "adjustable-overdrive-projector", {
         playerPlaced(tile) {
             // 算出最少需要多少次可以达到 lastNumber ，并发送指定次数个 configure
             Core.app.post(run(() => tile.configure(lastNumber + INIT_MASK)));
         },
-        buildConfiguration(tile, table) {
-            table.addImageButton(up1, Styles.clearTransi, run(() => { tile.configure(0) })).size(40)
-            table.addImageButton(up2, Styles.clearTransi, run(() => { tile.configure(1) })).size(40)
-            table.addImageButton(up3, Styles.clearTransi, run(() => { tile.configure(2) })).size(40)
-            table.addImageButton(up4, Styles.clearTransi, run(() => { tile.configure(3) })).size(40)
+        buildConfiguration(table) {
+            table.addImageButton(up1, Styles.clearTransi, run(() => { this.configure(0) })).size(40)
+            table.addImageButton(up2, Styles.clearTransi, run(() => { this.configure(1) })).size(40)
+            table.addImageButton(up3, Styles.clearTransi, run(() => { this.configure(2) })).size(40)
+            table.addImageButton(up4, Styles.clearTransi, run(() => { this.configure(3) })).size(40)
             table.row();
-            table.addImageButton(down1, Styles.clearTransi, run(() => { tile.configure(100) })).size(40)
-            table.addImageButton(down2, Styles.clearTransi, run(() => { tile.configure(101) })).size(40)
-            table.addImageButton(down3, Styles.clearTransi, run(() => { tile.configure(102) })).size(40)
-            table.addImageButton(down4, Styles.clearTransi, run(() => { tile.configure(103) })).size(40)
+            table.addImageButton(down1, Styles.clearTransi, run(() => { this.configure(100) })).size(40)
+            table.addImageButton(down2, Styles.clearTransi, run(() => { this.configure(101) })).size(40)
+            table.addImageButton(down3, Styles.clearTransi, run(() => { this.configure(102) })).size(40)
+            table.addImageButton(down4, Styles.clearTransi, run(() => { this.configure(103) })).size(40)
         },
-        configured(tile, player, value) {
-            const entity = tile.ent();
+        configured(player, value) {
+            const entity = this;
             // 小于 100 视为减小命令，大于 1000000（七位数）视为初始化
             if (value > INIT_MASK) {
                 entity.setSpeedTo(value - INIT_MASK);
@@ -231,9 +164,9 @@ extendContent(OverdriveProjector, "slow-overdrive-projector-05", {
                 Draw.reset();
             }
         },
-        update(tile) {
+        updateTile() {
 
-            const entity = tile.ent();
+            const entity = this;
             const tilesize = Vars.tilesize;
             const world = Vars.world;
             const speedBoost = entity.getSpeedToDecimal();

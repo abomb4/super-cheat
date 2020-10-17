@@ -1,22 +1,14 @@
-extendContent(Wall, "invincible-wall-small", {
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
-});
-extendContent(Wall, "invincible-wall-medium", {
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
-});
-extendContent(Wall, "invincible-wall-large", {
-    handleDamage(tile, amount) { return 0; },
-    handleBulletHit(entity, bullet) { },
-});
+var lib = require('super-cheat/lib');
 
-extendContent(Vault, "chrono-vault", {
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
+lib.setBuildingSimple(extendContent(Wall, "invincible-wall-small", {}), Wall.WallBuild, {
+    damage(damage) {  },
+    handleDamage(tile, amount) { return 0; },
 });
-
-extendContent(OverdriveProjector, "ultra-overdrive", {
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
+lib.setBuildingSimple(extendContent(Wall, "invincible-wall-medium", {}), Wall.WallBuild, {
+    damage(damage) {  },
+    handleDamage(tile, amount) { return 0; },
+});
+lib.setBuildingSimple(extendContent(Wall, "invincible-wall-large", {}), Wall.WallBuild, {
+    damage(damage) {  },
+    handleDamage(tile, amount) { return 0; },
 });

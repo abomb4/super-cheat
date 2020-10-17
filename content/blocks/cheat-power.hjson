@@ -2,6 +2,6 @@
 health: 2000
 category: power
 laserRange: 100
-maxNodes: 500
+maxNodes: 1500
 requirements: []
 research: cheat-liquid

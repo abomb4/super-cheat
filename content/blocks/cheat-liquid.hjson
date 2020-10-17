@@ -1,4 +1,4 @@
-// type: LiquidSource
+type: LiquidSource
 health: 2000
 category: liquid
 requirements: []
