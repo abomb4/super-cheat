@@ -3,7 +3,13 @@
     "size": 3,
     "solid": true,
     "targetable": false,
+    "hasLiquids": false,
+    "hasPower": false,
     "consumes": {
+        "items": {
+            "items": [{ "item": "copper", "amount": 1 }],
+            "booster": true
+        }
     },
     "requirements": [
     ],
