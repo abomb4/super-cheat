@@ -2,9 +2,10 @@ var lib = require('super-cheat/lib');
 
 var itemSource = extendContent(ItemSource, 'cheat-item', {});
 lib.setBuildingSimple(itemSource, ItemSource.ItemSourceBuild, {
-    dump(todump) {
+    dump(item) {
         var count = 36;
-        while (count > 0 && this.super$dump(todump)) {
+        this.items.set(item, count);
+        while (count > 0 && this.super$dump(item)) {
             count--;
         }
     },
