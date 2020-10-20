@@ -31,7 +31,7 @@ exports.loadRegion = function(name) {
  *        don't use prov (this function will use prov once)
  */
 exports.setBuilding = function(blockType, buildingCreator) {
-    blockType.buildType = prov(buildingCreator(blockType));
+    blockType.buildType = prov(() => buildingCreator(blockType));
 }
 
 /**

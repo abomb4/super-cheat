@@ -1,29 +1,18 @@
-//this is NOT the complete definition for this block! see content/blocks/scatter-silo.hjson for the stats and other properties.
+const lib = require('super-cheat/lib')
 
-//create a simple shockwave effect
-const siloLaunchEffect = newEffect(20, e => {
-    Draw.color(Color.white, Color.lightGray, e.fin()); //color goes from white to light gray
-    Lines.stroke(e.fout() * 3); //line thickness goes from 3 to 0
-    Lines.circle(e.x, e.y, e.fin() * 100); //draw a circle whose radius goes from 0 to 100
-});
-
-//create the block type
-const silo = extendContent(Block, "next-wave", {
+lib.setBuilding(extendContent(Block, "next-wave", {}), (block) => extend(Building, {
     //override the method to build configuration
-    buildConfiguration(tile, table) {
-        table.addImageButton(Icon.upOpen, Styles.clearTransi, run(() => {
-            tile.configure(0)
-        })).size(50)
-        table.addImageButton(Icon.warningSmall, Styles.clearTransi, run(() => {
-            tile.configure(1)
-        })).size(50)
-        // table.addImageButton(Icon.players, Styles.clearTransi, run(() => {
-        //     tile.configure(1)
-        // })).size(50)
+    buildConfiguration(table) {
+        table.button(Icon.upOpen, Styles.clearTransi, run(() => {
+            this.configure(0)
+        })).size(50).tooltip("Go one wave");
+        table.button(Icon.warningSmall, Styles.clearTransi, run(() => {
+            this.configure(1)
+        })).size(50).tooltip("Go ten wave");
     },
 
     //override configure event
-    configured(tile, player, value) {
+    configured(player, value) {
         switch (value) {
             case 0: {
                 // Evil thing, any one can call next wave
@@ -43,14 +32,10 @@ const silo = extendContent(Block, "next-wave", {
                     }
                 }
                 break;
-
-                // // RENEGADE!
-                // player.setTeam(player.getTeam() == Team.sharded ? Team.crux : Team.sharded);
-                // break;
             }
             default: {
                 // print('Unknown config event value ' + value);
             }
         }
     }
-})
+}));

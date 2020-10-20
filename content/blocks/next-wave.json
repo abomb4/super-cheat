@@ -6,7 +6,7 @@
   "targetable": false,
   "hasItems": false,
   "configurable": true,
-  "category": "turret",
+  "category": "effect",
   "consumes": {
   },
   "requirements": [],
