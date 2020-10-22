@@ -52,6 +52,9 @@ const destoryBeamBulletType = (() => {
                 }
             },
         });
+        bt.pierce = true;
+        bt.pierceCap = 6;
+        bt.pierceBuilding = false;
         bt.healPercent = 500;
         bt.speed = 3.5;
         bt.damage = Infinity;
@@ -120,6 +123,9 @@ const destoryBeamBulletType = (() => {
             }
         },
     });
+    bt.pierce = true;
+    bt.pierceCap = 6;
+    bt.pierceBuilding = false;
     bt.hitSize = 8;
     bt.healPercent = 1000;
     bt.speed = 6;

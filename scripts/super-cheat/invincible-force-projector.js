@@ -24,8 +24,8 @@ lib.setBuildingSimple(blockType, ForceProjector.ForceBuild, {
 
         this.phaseHeat = Mathf.lerpDelta(this.phaseHeat, Mathf.num(phaseValid), 0.1);
 
-        if (phaseValid && !this.broken && timer(this.timerUse, this.phaseUseTime) && this.efficiency() > 0) {
-            consume();
+        if (phaseValid && !this.broken && this.timer.get(blockType.timerUse, blockType.phaseUseTime) && this.efficiency() > 0) {
+            this.consume();
         }
 
         this.radscl = Mathf.lerpDelta(this.radscl, this.broken ? 0 : this.warmup, 0.05);
