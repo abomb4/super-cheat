@@ -3,8 +3,21 @@ displayName: (v6) Invincible Cheat 无敌作弊
 author: 滞人
 description: '''
 This is a [red]cheat[] mod, abuse will reduce your game experience, be careful for using this.
+Features:
+- Adjustable Overdrive Projector (speedup, or slow down)
+- Invincible Core and Invincible build plane
+- Cheat Items (power source, liquid source, item source with 36x faster)
+- Invincible Wall, Force Projector
+- Several strange projectors (not migrated to v6 yet)
 
 这是个[red]作弊[] mod，会降低游戏体验，请谨慎使用。
+主要特性：
+- 可调整的超速投影（更快，也可以更慢）
+- 无敌核心，无敌建造机
+- 作弊物品（电源、水源、物品源超快版）
+- 无敌围墙，无敌力场
+- 一大堆神奇力场（尚未迁移到 v6）
+
 '''
-version: 2.0.2
+version: 2.0.3
 minGameVersion: 109

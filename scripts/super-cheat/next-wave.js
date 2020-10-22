@@ -5,10 +5,10 @@ lib.setBuilding(extendContent(Block, "next-wave", {}), (block) => extend(Buildin
     buildConfiguration(table) {
         table.button(Icon.upOpen, Styles.clearTransi, run(() => {
             this.configure(0)
-        })).size(50).tooltip("Go one wave");
+        })).size(50).tooltip(lib.getMessage("message", "next-wave-1"));
         table.button(Icon.warningSmall, Styles.clearTransi, run(() => {
             this.configure(1)
-        })).size(50).tooltip("Go ten wave");
+        })).size(50).tooltip(lib.getMessage("message", "next-wave-10"));
     },
 
     //override configure event

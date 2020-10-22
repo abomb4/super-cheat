@@ -16,7 +16,7 @@ exports.loadSound = function (name, setter) {
     });
 }
 
-exports.aModName = "invincible-cheat-mod";
+exports.aModName = "invincible-cheat-mod-v6";
 
 exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 
@@ -41,4 +41,13 @@ exports.setBuilding = function(blockType, buildingCreator) {
  */
 exports.setBuildingSimple = function(blockType, buildingType, overrides) {
     blockType.buildType = prov(() => new JavaAdapter(buildingType, overrides, blockType));
+}
+
+/**
+ * Get message from bundle.
+ * @param {string} type the prefix such as block, unit, mech
+ * @param
+ */
+exports.getMessage = function(type, key) {
+    return Core.bundle.get(type + "." + exports.aModName + "." + key);
 }
