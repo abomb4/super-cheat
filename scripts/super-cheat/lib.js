@@ -20,6 +20,11 @@ exports.aModName = "invincible-cheat-mod-v6";
 
 exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 
+exports.cons2 = (func) => new Cons2({
+    get: (v1, v2) => func(v1, v2)
+});
+
+exports.emptyRegion = Core.atlas.blankAtlas();
 exports.loadRegion = function(name) {
     return Core.atlas.find(exports.aModName + '-' + name, Core.atlas.find("clear"))
 }

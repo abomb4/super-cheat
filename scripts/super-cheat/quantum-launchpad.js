@@ -3,7 +3,7 @@ const lib = require('super-cheat/lib')
 const evilNumber = 10000;
 var blockType = extendContent(LaunchPad, "quantum-launchpad", {});
 
-lib.setBuildingSimple(blockType, LanuchPad.LaunchPadBuild, {
+lib.setBuildingSimple(blockType, LaunchPad.LaunchPadBuild, {
 
     updateTile() {
         if (!state.isCampaign()) return;

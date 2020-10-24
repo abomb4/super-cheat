@@ -7,8 +7,6 @@
   "hasItems": false,
   "configurable": true,
   "category": "effect",
-  "consumes": {
-  },
   "requirements": [],
   "research": "cheat-power"
 }
