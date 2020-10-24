@@ -1,0 +1,11 @@
+{
+    "size": 2,
+    "health": 2000,
+    "update": true,
+    "solid": true,
+    "hasItems": true,
+    "configurable": true,
+    "category": "distribution",
+    "requirements": [],
+    "research": "chrono-unloader"
+}
