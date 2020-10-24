@@ -19,5 +19,5 @@ Features:
 - 一大堆神奇力场（尚未迁移到 v6）
 
 '''
-version: 2.0.5
+version: 2.0.6
 minGameVersion: 110

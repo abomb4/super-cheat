@@ -1,0 +1,19 @@
+{
+    "health": 100,
+    "size": 3,
+    "solid": false,
+    "hasLiquids": false,
+    "hasPower": false,
+    "update": true,
+    "radius": 180,
+    "consumes": {
+        "items": {
+            "items": [{ "item": "copper", "amount": 1 }],
+            "booster": true
+        }
+    },
+    "requirements": [
+    ],
+    "category": "effect",
+    "research": "enemys-no-damage"
+}
