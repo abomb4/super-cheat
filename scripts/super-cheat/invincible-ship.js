@@ -75,7 +75,7 @@ const invincibleWeapon = (() => {
 const mech = (() => {
     const m = extendContent(UnitType, 'invincible-ship', {});
 
-    m.abilities.add(new HealFieldAbility(Infinity, 60, 60));
+    m.abilities.add(new RepairFieldAbility(Infinity, 60, 60));
     // m.abilities.add(new JavaAdapter(ForceFieldAbility, {}, 60, Infinity, Infinity, 300));
     m.abilities.add(InvincibleForceFieldAbility(60, Infinity, Infinity, 300));
     m.constructor = prov(() => extend(BuilderMinerUnit, { damage(amount) { } }));
