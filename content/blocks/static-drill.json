@@ -5,6 +5,7 @@
     "drillTime": 1,
     "hardnessDrillMultiplier": 0,
     "liquidBoostIntensity": 2,
+    "canOverdrive": false,
     "warmupSpeed": 30,
     "drillEffect": "none",
     "updateEffect": "none",

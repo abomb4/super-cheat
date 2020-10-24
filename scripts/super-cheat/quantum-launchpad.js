@@ -1,25 +1,30 @@
+const lib = require('super-cheat/lib')
 
 const evilNumber = 10000;
-extendContent(LaunchPad, "quantum-launchpad", {
-    update(tile) {
-        const entity = tile.entity;
-        const itemCapacity = this.itemCapacity;
-        const timerLaunch = this.timerLaunch;
-        const launchTime = this.launchTime;
+var blockType = extendContent(LaunchPad, "quantum-launchpad", {});
 
-        if (entity.cons.valid() && entity.items.total() >= itemCapacity && entity.timer.get(timerLaunch, launchTime / entity.timeScale)) {
-            const items = Vars.content.items();
-            for (var i = 0; i < items.size; i++) {
-                var item = items.get(i);
-                Events.fire(EventType.Trigger.itemLaunch);
-                Effects.effect(Fx.padlaunch, tile);
-                var used = Math.min(entity.items.get(item), itemCapacity);
-                Vars.data.addItem(item, used * evilNumber);
-                entity.items.remove(item, used);
-                Events.fire(new EventType.LaunchItemEvent(item, used * evilNumber));
-            }
+lib.setBuildingSimple(blockType, LanuchPad.LaunchPadBuild, {
+
+    updateTile() {
+        if (!state.isCampaign()) return;
+        var items = this.items;
+        var itemCapacity = this.itemCapacity;
+        var launchTime = this.timeScale;
+        var team = this.timeScale;
+        var timerLaunch = this.timeScale;
+        var timeScale = this.timeScale;
+
+        //launch when full and base conditions are met
+        if (items.total() >= itemCapacity && efficiency() >= 1 && timer(timerLaunch, launchTime / timeScale)) {
+            var entity = LaunchPayload.create();
+            items.each((item, amount) => entity.stacks.add(new ItemStack(item, amount * evilNumber)));
+            entity.set(this);
+            entity.lifetime(120);
+            entity.team(team);
+            entity.add();
+            Fx.launchPod.at(this);
+            items.clear();
+            Effect.shake(3, 3, this);
         }
-    },
-    // handleDamage(tile, amount) { return 0; },
-    // handleBulletHit(entity, bullet) { },
+    }
 });

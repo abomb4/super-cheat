@@ -3,6 +3,7 @@
     "size": 4,
     "itemCapacity": 100,
     "destructible": true,
+    "buildVisibility": "campaignOnly",
     "launchTime": 120,
     "category": "effect",
     "research": "cheat-power",
