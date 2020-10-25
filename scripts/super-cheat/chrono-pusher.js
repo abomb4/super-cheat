@@ -59,10 +59,22 @@ blockType.configurable = true;
 blockType.saveConfig = false;
 blockType.itemCapacity = 100;
 blockType.noUpdateDisabled = true;
-blockType.config(Seq, lib.cons2((tile, sq) => {
+blockType.config(IntSeq, lib.cons2((tile, sq) => {
     // This seems only used by coping block
-    var newLinks = sq.map(lib.func(point => Point2.pack(point.x + tile.tileX(), point.y + tile.tileY())));
-    tile.setLink(newLinks);
+    var links = new Seq(java.lang.Integer);
+    var linkX = null;
+    for (var i = 0; i < sq.size; i++) {
+        var num = sq.get(i);
+        if (linkX == null) {
+            linkX = num;
+        } else {
+            var pos = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
+            links.add(lib.int(pos));
+            linkX = null;
+        }
+    }
+
+    tile.setLink(links);
 }));
 blockType.config(java.lang.Integer, lib.cons2((tile, int) => {
     tile.setOneLink(int);
@@ -209,9 +221,14 @@ blockType.buildType = prov(() => {
             return true;
         },
         config() {
+            var output = new IntSeq(links.size * 2);
             // This seems called by coping block
-            var conf = links.map(lib.func(pos => Point2.unpack(pos).sub(this.tile.x, this.tile.y)));
-            return conf;
+            for (var i = 0; i < links.size; i++) {
+                var pos = links.get(i);
+                var point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
+                output.add(point2.x, point2.y);
+            }
+            return output;
         },
         write(write) {
             this.super$write(write);

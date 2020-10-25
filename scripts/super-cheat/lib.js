@@ -59,3 +59,5 @@ exports.setBuildingSimple = function(blockType, buildingType, overrides) {
 exports.getMessage = function(type, key) {
     return Core.bundle.get(type + "." + exports.aModName + "." + key);
 }
+
+exports.int = (v) => new java.lang.Integer(v);
