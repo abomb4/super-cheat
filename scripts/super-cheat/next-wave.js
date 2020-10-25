@@ -17,7 +17,7 @@ lib.setBuilding(extendContent(Block, "next-wave", {}), (block) => extend(Buildin
             case 0: {
                 // Evil thing, any one can call next wave
                 if (Vars.net.client()) {
-                    Call.onAdminRequest(Vars.player, Packages.mindustry.net.Packets.AdminAction.wave);
+                    Call.adminRequest(Vars.player, Packages.mindustry.net.Packets.AdminAction.wave);
                 } else {
                     Vars.state.wavetime = 0;
                 }
@@ -26,7 +26,7 @@ lib.setBuilding(extendContent(Block, "next-wave", {}), (block) => extend(Buildin
             case 1: {
                 for (var i = 10; i > 0; i--) {
                     if (Vars.net.client()) {
-                        Call.onAdminRequest(Vars.player, Packages.mindustry.net.Packets.AdminAction.wave);
+                        Call.adminRequest(Vars.player, Packages.mindustry.net.Packets.AdminAction.wave);
                     } else {
                         Vars.logic.runWave();
                     }
