@@ -18,14 +18,14 @@ const healed = new IntSet();
         }
     }
 
-    var up1 =   Core.atlas.find("clear");
-    var up2 =   Core.atlas.find("clear");
-    var up3 =   Core.atlas.find("clear");
-    var up4 =   Core.atlas.find("clear");
-    var down1 = Core.atlas.find("clear");
-    var down2 = Core.atlas.find("clear");
-    var down3 = Core.atlas.find("clear");
-    var down4 = Core.atlas.find("clear");
+    var up1    ;
+    var up2    ;
+    var up3    ;
+    var up4    ;
+    var down1  ;
+    var down2  ;
+    var down3  ;
+    var down4  ;
 
     const MAX = 1000 * 100;
     const MIN = 1;

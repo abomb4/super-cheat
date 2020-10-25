@@ -27,7 +27,6 @@ exports.func = (getter) => new Func({
     get: getter
 });
 
-exports.emptyRegion = Core.atlas.blankAtlas();
 exports.loadRegion = function(name) {
     return Core.atlas.find(exports.aModName + '-' + name, Core.atlas.find("clear"))
 }

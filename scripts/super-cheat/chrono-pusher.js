@@ -4,9 +4,9 @@ const range = 1200;
 const warmupSpeed = 0.05;
 
 // Must load region in 'load()'
-var topRegion = lib.emptyRegion;
-var bottomRegion = lib.emptyRegion;
-var rotatorRegion = lib.emptyRegion;
+var topRegion;
+var bottomRegion;
+var rotatorRegion;
 
 const ORANGE = Color.valueOf("#fea947");
 

@@ -2,7 +2,7 @@ var lib = require('super-cheat/lib');
 var invincibleShipJs = require('super-cheat/invincible-ship');
 
 const invincibleCore = extendContent(CoreBlock, "invincible-core", {
-    canBreak() { return Vars.state.teams.cores(Vars.player.team()).size > 1; },
+    canBreak(tile) { return Vars.state.teams.cores(team.team()).size > 1; },
     canReplace(other) { return other.alwaysReplace; },
     canPlaceOn(tile, team) { return true; },
     placeBegan(tile, previous) {},
