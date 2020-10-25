@@ -51,6 +51,40 @@ const blockType = extendContent(StorageBlock, "chrono-pusher", {
     drawPlace(x, y, rotation, valid) {
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
     },
+    pointConfig(config, transformer) {
+        // Rotate relative points
+        if (IntSeq.__javaObject__.isInstance(config)) {
+            // ROTATE IT!
+            var newSeq = new IntSeq(config.size);
+            var linkX = null;
+            for (var i = 0; i < config.size; i++) {
+                var num = config.get(i);
+                if (linkX == null) {
+                    linkX = num;
+                } else {
+                    var point = new Point2(linkX, num);
+                    transformer.get(point);
+
+                    // The source position is relative to right bottom, transform it.
+                    var blockPoint = new Point2(0, 1);
+                    transformer.get(blockPoint);
+                    if (blockPoint.x == 1) {
+                        point.y += 1;
+                    } else if (blockPoint.x == -1) {
+                        point.x += 1;
+                    } else {
+                        print("Don't know how it rotated");
+                    }
+                    newSeq.add(point.x);
+                    newSeq.add(point.y);
+                    linkX = null;
+                }
+            }
+            return newSeq;
+        } else {
+            return config;
+        }
+    },
 });
 blockType.update = true;
 blockType.solid = true;

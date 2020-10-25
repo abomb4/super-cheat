@@ -8,27 +8,7 @@ var topRegion;
 var bottomRegion;
 var rotatorRegion;
 
-const ORANGE = Color.valueOf("#fea947");
 const BLUE = Color.valueOf("#0068fc");
-
-const inEffect = lib.newEffect(38, e => {
-    Draw.color(ORANGE);
-
-    Angles.randLenVectors(e.id, 1, 8 * e.fout(), 0, 360, new Floatc2({
-        get: (x, y) => {
-            var angle = Angles.angle(0, 0, x, y);
-            var trnsx = Angles.trnsx(angle, 2);
-            var trnsy = Angles.trnsy(angle, 2);
-            var trnsx2 = Angles.trnsx(angle, 4);
-            var trnsy2 = Angles.trnsy(angle, 4);
-            Fill.circle(
-                e.x + trnsx + x + trnsx2 * e.fout(),
-                e.y + trnsy + y + trnsy2 * e.fout(),
-                e.fslope() * 0.8
-            );
-        }
-    }));
-});
 
 const outEffect = lib.newEffect(38, e => {
     Draw.color(BLUE);
@@ -68,6 +48,42 @@ const blockType = extendContent(Block, "chrono-unloader", {
     drawPlace(x, y, rotation, valid) {
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
     },
+    pointConfig(config, transformer) {
+        // Rotate relative points
+        if (IntSeq.__javaObject__.isInstance(config)) {
+            // ROTATE IT!
+            var newSeq = new IntSeq(config.size);
+            newSeq.add(config.get(0));
+            newSeq.add(config.get(1));
+            var linkX = null;
+            for (var i = 2; i < config.size; i++) {
+                var num = config.get(i);
+                if (linkX == null) {
+                    linkX = num;
+                } else {
+                    var point = new Point2(linkX, num);
+                    transformer.get(point);
+
+                    // The source position is relative to right bottom, transform it.
+                    var blockPoint = new Point2(0, 1);
+                    transformer.get(blockPoint);
+                    if (blockPoint.x == 1) {
+                        point.y += 1;
+                    } else if (blockPoint.x == -1) {
+                        point.x += 1;
+                    } else {
+                        print("Don't know how it rotated");
+                    }
+                    newSeq.add(point.x);
+                    newSeq.add(point.y);
+                    linkX = null;
+                }
+            }
+            return newSeq;
+        } else {
+            return config;
+        }
+    },
 });
 blockType.update = true;
 blockType.solid = true;
@@ -76,20 +92,23 @@ blockType.configurable = true;
 blockType.saveConfig = false;
 blockType.itemCapacity = 100;
 blockType.noUpdateDisabled = true;
-blockType.config(ObjectMap, lib.cons2((tile, map) => {
-    var itemId = map.get('itemTypeId');
-    if (itemId != undefined && itemId >= 0) {
-        tile.setItemTypeId(itemId);
-    }
-    var seq = map.get('links');
-    if (seq) {
-        var newLinks = seq.map(lib.func(point => Point2.pack(point.x + tile.tileX(), point.y + tile.tileY())));
-        tile.setLink(newLinks);
-    }
-}));
-blockType.config(Seq, lib.cons2((tile, seq) => {
+blockType.config(IntSeq, lib.cons2((tile, seq) => {
     // This seems only used by coping block
-    var newLinks = seq.map(lib.func(point => Point2.pack(point.x + tile.tileX(), point.y + tile.tileY())));
+    // Deserialize from IntSeq
+    var itemId = seq.get(0)
+    var size = seq.get(1);
+    var linkX = null;
+    var newLinks = new Seq(true, size, java.lang.Integer);
+    for (var i = 2; i < seq.size; i++) {
+        var num = seq.get(i);
+        if (linkX == null) {
+            linkX = num;
+        } else {
+            var point = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
+            newLinks.add(lib.int(point));
+        }
+    }
+    tile.setItemTypeId(itemId);
     tile.setLink(newLinks);
 }));
 blockType.config(java.lang.Integer, lib.cons2((tile, int) => {
@@ -255,11 +274,16 @@ blockType.buildType = prov(() => {
             }));
         },
         config() {
-            var linksPack = links.map(lib.func(pos => Point2.unpack(pos).sub(this.tile.x, this.tile.y)));
-            var map = new ObjectMap(4)
-            map.put('itemTypeId', itemType == null ? -1 : itemType.id);
-            map.put('links', linksPack);
-            return map;
+            // Serialize to IntSeq (I don't know how to serialize to byte[], maybe ByteArrayOutputStream?)
+            var seq = new IntSeq(links.size * 2 + 2);
+            seq.add(itemType == null ? -1 : itemType.id);
+            seq.add(links.size);
+            for (var i = 0; i < links.size; i++) {
+                var point = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
+                seq.add(lib.int(point.getX()));
+                seq.add(lib.int(point.getY()));
+            }
+            return seq;
         },
         version() {
             return 2;
