@@ -77,7 +77,10 @@ blockType.saveConfig = false;
 blockType.itemCapacity = 100;
 blockType.noUpdateDisabled = true;
 blockType.config(ObjectMap, lib.cons2((tile, map) => {
-    tile.setItemTypeId(map.get('itemTypeId'));
+    var itemId = map.get('itemTypeId');
+    if (itemId != undefined && itemId >= 0) {
+        tile.setItemTypeId(itemId);
+    }
     var seq = map.get('links');
     if (seq) {
         var newLinks = seq.map(lib.func(point => Point2.pack(point.x + tile.tileX(), point.y + tile.tileY())));
