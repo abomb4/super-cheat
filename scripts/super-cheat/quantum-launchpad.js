@@ -6,7 +6,7 @@ var blockType = extendContent(LaunchPad, "quantum-launchpad", {});
 lib.setBuildingSimple(blockType, LaunchPad.LaunchPadBuild, {
 
     updateTile() {
-        if (!state.isCampaign()) return;
+        if (!Vars.state.isCampaign()) return;
         var items = this.items;
         var itemCapacity = this.itemCapacity;
         var launchTime = this.timeScale;
