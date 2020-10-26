@@ -62,21 +62,12 @@ const blockType = extendContent(StorageBlock, "chrono-pusher", {
                 if (linkX == null) {
                     linkX = num;
                 } else {
-                    var point = new Point2(linkX, num);
-                    transformer.get(point);
-
                     // The source position is relative to right bottom, transform it.
-                    var blockPoint = new Point2(0, 1);
-                    transformer.get(blockPoint);
-                    if (blockPoint.x == 1) {
-                        point.y += 1;
-                    } else if (blockPoint.x == -1) {
-                        point.x += 1;
-                    } else {
-                        print("Don't know how it rotated");
-                    }
-                    newSeq.add(point.x);
-                    newSeq.add(point.y);
+                    var point = new Point2(linkX * 2 - 1, num * 2 - 1);
+
+                    transformer.get(point);
+                    newSeq.add((point.x + 1) / 2);
+                    newSeq.add((point.y + 1) / 2);
                     linkX = null;
                 }
             }

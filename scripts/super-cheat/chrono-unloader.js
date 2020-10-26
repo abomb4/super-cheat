@@ -61,21 +61,12 @@ const blockType = extendContent(Block, "chrono-unloader", {
                 if (linkX == null) {
                     linkX = num;
                 } else {
-                    var point = new Point2(linkX, num);
-                    transformer.get(point);
-
                     // The source position is relative to right bottom, transform it.
-                    var blockPoint = new Point2(0, 1);
-                    transformer.get(blockPoint);
-                    if (blockPoint.x == 1) {
-                        point.y += 1;
-                    } else if (blockPoint.x == -1) {
-                        point.x += 1;
-                    } else {
-                        print("Don't know how it rotated");
-                    }
-                    newSeq.add(point.x);
-                    newSeq.add(point.y);
+                    var point = new Point2(linkX * 2 - 1, num * 2 - 1);
+
+                    transformer.get(point);
+                    newSeq.add((point.x + 1) / 2);
+                    newSeq.add((point.y + 1) / 2);
                     linkX = null;
                 }
             }
@@ -106,6 +97,7 @@ blockType.config(IntSeq, lib.cons2((tile, seq) => {
         } else {
             var point = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
             newLinks.add(lib.int(point));
+            linkX = null;
         }
     }
     tile.setItemTypeId(itemId);
@@ -279,9 +271,9 @@ blockType.buildType = prov(() => {
             seq.add(itemType == null ? -1 : itemType.id);
             seq.add(links.size);
             for (var i = 0; i < links.size; i++) {
-                var point = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
-                seq.add(lib.int(point.getX()));
-                seq.add(lib.int(point.getY()));
+                var pos = links.get(i);
+                var point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
+                seq.add(point2.x, point2.y);
             }
             return seq;
         },
