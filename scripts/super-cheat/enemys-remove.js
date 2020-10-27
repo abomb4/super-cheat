@@ -75,11 +75,11 @@ lib.setBuildingSimple(blockType, ForceProjector.ForceBuild, {
                 Lines.poly(x, y, 6, radius);
             } else {
                 Lines.stroke(1.5);
-                Draw.alpha(0.09 + Mathf.clamp(0.08 * hit));
                 Draw.color(COLOR, Color.white, Mathf.clamp(hit));
+                Draw.alpha(0.09 + Mathf.clamp(0.08 * hit));
                 Fill.poly(x, y, 6, radius);
-                Draw.alpha(1);
                 Draw.color(this.team.color, Color.white, Mathf.clamp(hit));
+                Draw.alpha(1);
                 Lines.poly(x, y, 6, radius);
                 Draw.reset();
             }
