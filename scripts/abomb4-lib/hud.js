@@ -42,6 +42,7 @@ interface FragCategory {
  * +------------------------------------+
  *
  * @param {FragConfig} 配置项
+ * @author abomb4<abomb4@163.com>
  */
 var leftFrag = (fragConfig) => {
     // TODO validate fragConfig
@@ -84,7 +85,7 @@ var leftFrag = (fragConfig) => {
     }
     function getSelectedBlock(cat) {
         return selectedBlocks.get(cat, prov(() => {
-            var category = fragConfig.categories(cat)
+            var category = fragConfig.categories[cat]
             return category.blocks.find(v => unlocked(v));
         }));
     }
@@ -113,17 +114,19 @@ var leftFrag = (fragConfig) => {
                                 blockTable.row();
                             }
 
-                            var button = blockTable.button(new TextureRegionDrawable(block.icon(Cicon.medium)), Styles.selecti, run(() => {
-                                if (unlocked(block)) {
-                                    if (Core.input.keyDown(Packages.arc.input.KeyCode.shiftLeft) && Fonts.getUnicode(block.name) != 0) {
-                                        Core.app.setClipboardText(Fonts.getUnicode(block.name) + "");
-                                        Vars.ui.showInfoFade("@copied");
-                                    } else {
-                                        Vars.control.input.block = Vars.control.input.block == block ? null : block;
-                                        selectedBlocks.put(currentCategory, Vars.control.input.block);
+                            var button = ((block) =>
+                                blockTable.button(new TextureRegionDrawable(block.icon(Cicon.medium)), Styles.selecti, run(() => {
+                                    if (unlocked(block)) {
+                                        if (Core.input.keyDown(Packages.arc.input.KeyCode.shiftLeft) && Fonts.getUnicode(block.name) != 0) {
+                                            Core.app.setClipboardText(Fonts.getUnicode(block.name) + "");
+                                            Vars.ui.showInfoFade("@copied");
+                                        } else {
+                                            Vars.control.input.block = Vars.control.input.block == block ? null : block;
+                                            selectedBlocks.put(currentCategory, Vars.control.input.block);
+                                        }
                                     }
-                                }
-                            })).size(iconWidth).group(group).name("block-" + block.name).get();
+                                })).size(iconWidth).group(group).name("block-" + block.name).get()
+                            )(block);
                             button.resizeImage(Cicon.medium.size);
 
                             button.update(run(() => {
@@ -146,21 +149,21 @@ var leftFrag = (fragConfig) => {
                                     }
                                 }));
                             }));
-
-                            //add missing elements to even out table size
-                            if (index < fragConfig.columns) {
-                                for (var k = 0; k < fragConfig.columns - index; k++) {
-                                    blockTable.add().size(iconWidth);
-                                }
-                            }
-                            blockTable.act(0);
-                            blockPane.setScrollYForce(scrollPositions.get(currentCategory, 0));
-                            Core.app.post(() => {
-                                blockPane.setScrollYForce(scrollPositions.get(currentCategory, 0));
-                                blockPane.act(0);
-                                blockPane.layout();
-                            });
                         }
+
+                        //add missing elements to even out table size
+                        if (index < fragConfig.columns) {
+                            for (var k = 0; k < fragConfig.columns - index; k++) {
+                                blockTable.add().size(iconWidth);
+                            }
+                        }
+                        blockTable.act(0);
+                        blockPane.setScrollYForce(scrollPositions.get(currentCategory, 0));
+                        Core.app.post(() => {
+                            blockPane.setScrollYForce(scrollPositions.get(currentCategory, 0));
+                            blockPane.act(0);
+                            blockPane.layout();
+                        });
 
                     });
 
@@ -225,12 +228,15 @@ var leftFrag = (fragConfig) => {
 
 Events.on(ClientLoadEvent, cons((e) => {
     var frag = leftFrag({
-        rows: 3,
-        columns: 3,
+        rows: 4,
+        columns: 6,
         categories: [
-            { icon: () => Icon.warning, blocks: [Blocks.duo] },
-            { icon: () => Icon.power, blocks: [Blocks.rtgGenerator] },
-            { icon: () => Icon.power, blocks: [Blocks.rtgGenerator] },
+            { icon: () => Icon.warning, blocks: [
+                Blocks.mechanicalDrill, Blocks.conveyor, Blocks.duo,                    Blocks.copperWall,
+                Blocks.distributor,     Blocks.junction, Blocks.itemBridge,             Blocks.scatter,
+                Blocks.graphitePress,   Blocks.hail,     Blocks.combustionGenerator,    Blocks.battery,
+                Blocks.pneumaticDrill,  Blocks.titaniumConveyor, Blocks.siliconSmelter, Blocks.airFactory,
+            ] },
             { icon: () => Icon.power, blocks: [Blocks.rtgGenerator] },
         ]
     });

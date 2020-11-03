@@ -63,7 +63,7 @@ const invincibleWeapon = (() => {
     w.name = lib.aModName + '-' + 'invincible-ship-weapon';
     w.length = 1.5;
     w.reload = 7;
-    w.ejectEffect = Fx.shellEjectSmall;
+    // w.ejectEffect = Fx.shellEjectSmall;
     w.bullet = invincibleBulletType;
     w.rotate = true;
     w.rotateSpeed = 20;
