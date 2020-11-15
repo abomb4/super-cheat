@@ -5,18 +5,22 @@ const shieldConsumer = (paramEntity) => cons(trait => {
     if (trait.team != paramEntity.team
         && !trait.dead
         && Intersector.isInsideHexagon(paramEntity.x, paramEntity.y, paramEntity.realRadius() * 2, trait.x, trait.y)) {
-        trait.dead = true;
-        trait.health = 0;
-        trait.kill();
-        if (Vars.net.client()) {
-            // Client do not create new unit
-            return;
+        if (paramEntity.team.data().countType(trait.type) > Units.getCap(paramEntity.team)) {
+            Call.unitDespawn(trait);
+        } else {
+            trait.dead = true;
+            trait.health = 0;
+            trait.kill();
+            if (Vars.net.client()) {
+                // Client do not create new unit
+                return;
+            }
+            trait.remove();
+            var unit = trait.type.create(Vars.player.team());
+            unit.set(trait.x, trait.y);
+            unit.rotation = trait.rotation;
+            unit.add();
         }
-        trait.remove();
-        var unit = trait.type.create(Vars.player.team());
-        unit.set(trait.x, trait.y);
-        unit.rotation = trait.rotation;
-        unit.add();
     }
 });
 const COLOR = Color.pink;

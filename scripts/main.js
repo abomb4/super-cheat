@@ -15,6 +15,7 @@ require('super-cheat/quantum-launchpad')
 require('super-cheat/adjustable-overdrive-projector')
 require('super-cheat/chrono-unloader')
 require('super-cheat/chrono-pusher')
+require('super-cheat/turret-turret')
 
 // Events.on(EventType.ClientLoadEvent, cons(e => {
 

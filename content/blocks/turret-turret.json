@@ -1,0 +1,14 @@
+{
+    "category": "turret",
+    "health": 6000,
+    "size": 3,
+    "reloadTime": 10,
+    "range": 500,
+    "inaccuracy": 20,
+    "rotateSpeed": 20,
+    "targetInterval": 0,
+    "shootCone": 80,
+    "shootSound": "swish",
+    "requirements": [],
+    "research": "must-die-turret"
+}
