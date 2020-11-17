@@ -3,12 +3,12 @@
     "health": 6000,
     "size": 3,
     "reloadTime": 10,
-    "range": 500,
-    "inaccuracy": 20,
+    "range": 570,
+    "inaccuracy": 15,
     "rotateSpeed": 20,
     "targetInterval": 0,
     "shootCone": 80,
-    "shootSound": "swish",
+    "shootSound": "pew",
     "requirements": [],
     "research": "must-die-turret"
 }
