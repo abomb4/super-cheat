@@ -56,7 +56,8 @@ function defineTurretBullet(turret, bullets, options) {
                         shotCounter: 0,
                         bulletLife: 0,
                         bullet: null,
-                        spinDirection: [1, -1][Math.floor(Math.random() * 2)]
+                        spinDirection: [1, -1][Math.floor(Math.random() * 2)],
+                        startRotation: Math.floor(Math.random() * 360)
                     };
                 }
             },
@@ -65,7 +66,7 @@ function defineTurretBullet(turret, bullets, options) {
                 var shrinkX = this.shrinkX;
                 var height = this.height * ((1 - shrinkY) + shrinkY * b.fout());
                 var width = this.width * ((1 - shrinkX) + shrinkX * b.fout());
-                var offset = -90 + (this.spin != 0 ? b.time * this.spin * b.data.spinDirection : 0);
+                var offset = -90 + (this.spin != 0 ? b.time * this.spin * b.data.spinDirection + b.data.startRotation : 0);
                 Draw.color(this.frontColor);
                 Draw.rect(this.frontRegion, b.x, b.y, width, height, b.rotation() + offset);
                 Draw.reset();
@@ -73,7 +74,7 @@ function defineTurretBullet(turret, bullets, options) {
             update(b) {
                 this.super$update(b);
 
-                var offset = (this.spin != 0 ? b.time * this.spin * b.data.spinDirection : 0);
+                var offset = (this.spin != 0 ? b.time * this.spin * b.data.spinDirection + b.data.startRotation : 0);
                 var angle = b.rotation() + offset;
                 tr.trns(angle, turret.size * Vars.tilesize / 2);
                 var x = b.x + tr.x;
@@ -100,7 +101,7 @@ function defineTurretBullet(turret, bullets, options) {
                     if (turret.shootDuration > 0) {
                         // for meltdown
                         if (b.data.bulletLife <= 0) {
-                            b.data.bulletLife = turret.shootDuration;
+                            b.data.bulletLife = turret.shootDuration / 2;
                             b.data.bullet = bt.create(b, b.team, x, y, angle, 1, 0.8);
                             turret.shootEffect.at(x, y, angle);
                         }
