@@ -60,3 +60,41 @@ exports.getMessage = function(type, key) {
 }
 
 exports.int = (v) => new java.lang.Integer(v);
+
+exports.createProbabilitySelector = function() {
+    const objects = [];
+    const probabilities = [];
+    var maxProbabilitySum = 0;
+
+    return {
+        showProbabilities() {
+            const p = [];
+            var previous = 0;
+            for (var i = 0; i < probabilities.length; i++) {
+                var current = probabilities[i];
+                p.push(parseFloat(((current - previous) / maxProbabilitySum).toFixed(5)))
+                previous = current;
+            }
+            return p;
+        },
+        add(obj, probability) {
+            if (!Number.isInteger(probability)) {
+                throw "'probability' must integer."
+            }
+            maxProbabilitySum += probability;
+            objects.push(obj);
+            probabilities.push(maxProbabilitySum);
+        },
+        random: function() {
+            const random = Math.floor(Math.random() * maxProbabilitySum);
+            // Can use binary search
+            for (var i = 0; i < probabilities.length; i++) {
+                var max = probabilities[i];
+                if (random < max) {
+                    return objects[i];
+                }
+            }
+            throw "IMPOSSIBLE!!! THIS IS A BUG"
+        }
+    }
+}
