@@ -23,5 +23,5 @@ Features:
 - 时空提取器、时空推送器
 
 '''
-version: 2.5.2
-minGameVersion: 114
+version: 2.5.3
+minGameVersion: 115

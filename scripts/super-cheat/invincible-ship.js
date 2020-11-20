@@ -78,7 +78,7 @@ const mech = (() => {
     m.abilities.add(new RepairFieldAbility(Infinity, 60, 60));
     // m.abilities.add(new JavaAdapter(ForceFieldAbility, {}, 60, Infinity, Infinity, 300));
     m.abilities.add(InvincibleForceFieldAbility(60, Infinity, Infinity, 300));
-    m.constructor = prov(() => extend(BuilderUnit, { damage(amount) { } }));
+    m.constructor = prov(() => extend(UnitTypes.alpha.constructor.get().class, { damage(amount) { } }));
 
     m.weapons.add(invincibleWeapon);
     m.flying = true;
