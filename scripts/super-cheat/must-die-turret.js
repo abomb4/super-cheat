@@ -22,8 +22,8 @@ const destoryBeamBulletType = (() => {
         });
 
         const bt = extend(BasicBulletType, {
-            hitTile(b, tile, health) {
-                this.super$hitTile(b, tile, health);
+            hitTile(b, tile, health, direct) {
+                this.super$hitTile(b, tile, health, direct);
                 if (tile && tile.team != b.team) {
                     Tile.tileDestroyed(tile);
                 }
@@ -89,8 +89,8 @@ const destoryBeamBulletType = (() => {
     });
 
     const bt = extend(BasicBulletType, {
-        hitTile(b, tile, health) {
-            this.super$hitTile(b, tile, health);
+        hitTile(b, tile, health, direct) {
+            this.super$hitTile(b, tile, health, direct);
             if (tile && tile.team != b.team) {
                 Tile.tileDestroyed(tile);
             }

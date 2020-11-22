@@ -36,8 +36,8 @@ const InvincibleForceFieldAbility = (radius, regen, max, cooldown) => {
 const invincibleBulletType = (() => {
 
     const bt = extend(BasicBulletType, {
-        hitTile(b, tile, health) {
-            this.super$hitTile(b, tile, health);
+        hitTile(b, tile, health, direct) {
+            this.super$hitTile(b, tile, health, direct);
             if (tile) {
                 Tile.tileDestroyed(tile);
             }
@@ -78,7 +78,9 @@ const mech = (() => {
     m.abilities.add(new RepairFieldAbility(Infinity, 60, 60));
     // m.abilities.add(new JavaAdapter(ForceFieldAbility, {}, 60, Infinity, Infinity, 300));
     m.abilities.add(InvincibleForceFieldAbility(60, Infinity, Infinity, 300));
-    m.constructor = prov(() => extend(UnitTypes.alpha.constructor.get().class, { damage(amount) { } }));
+    m.constructor = prov(() => extend(UnitTypes.alpha.constructor.get().class, {
+        damage(amount) { },
+    }));
 
     m.weapons.add(invincibleWeapon);
     m.flying = true;
