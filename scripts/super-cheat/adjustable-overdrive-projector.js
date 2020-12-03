@@ -126,10 +126,10 @@ const healed = new IntSet();
             draw(){
                 this.super$draw();
                 const tilesize = Vars.tilesize;
-                var f = 1 - (Time.time() / 100) % 1;
+                var f = 1 - (Time.time / 100) % 1;
 
                 Draw.color(baseColor, phaseColor, getPhaseHeat());
-                Draw.alpha(getHeat() * Mathf.absin(Time.time(), 10, 1) * 0.5);
+                Draw.alpha(getHeat() * Mathf.absin(Time.time, 10, 1) * 0.5);
                 Draw.rect(this.topRegion, this.tile.drawx(), this.tile.drawy());
                 Draw.alpha(1);
                 Lines.stroke((2 * f + 0.2) * getHeat());

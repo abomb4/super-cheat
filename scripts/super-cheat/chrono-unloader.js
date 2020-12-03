@@ -232,7 +232,7 @@ blockType.buildType = prov(() => {
         },
         drawConfigure() {
             const tilesize = Vars.tilesize;
-            var sin = Mathf.absin(Time.time(), 6, 1);
+            var sin = Mathf.absin(Time.time, 6, 1);
 
             Draw.color(Pal.accent);
             Lines.stroke(1);
