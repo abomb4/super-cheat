@@ -4,8 +4,11 @@
 Inhumane Mindustry cheating mod, abuse will affect the game experience.
 
 This is a cheat mod, abuse will reduce your game experience, be careful for using this.
+
 GitHub: https://github.com/abomb4/super-cheat
+
 email:  abomb4@163.com
+
 Wellcome to feedback!
 
 Features:
