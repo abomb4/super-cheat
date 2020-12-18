@@ -27,6 +27,9 @@ const InvincibleForceFieldAbility = (radius, regen, max, cooldown) => {
             Groups.bullet.intersect(unit.x - realRad, unit.y - realRad, realRad * 2, realRad * 2, shieldConsumer);
             this.super$update(unit);
         },
+        copy() {
+            return InvincibleForceFieldAbility(radius, regen, max, cooldown);
+        },
         draw(unit) { this.super$draw(unit); },
     }, radius, regen, max, cooldown);
 
@@ -36,6 +39,11 @@ const InvincibleForceFieldAbility = (radius, regen, max, cooldown) => {
 const invincibleBulletType = (() => {
 
     const bt = extend(BasicBulletType, {
+        hitEntity(b, other, initialHealth) {
+            if (other && other.kill) {
+                other.kill();
+            }
+        },
         hitTile(b, tile, health, direct) {
             this.super$hitTile(b, tile, health, direct);
             if (tile) {
@@ -75,16 +83,18 @@ const invincibleWeapon = (() => {
 const mech = (() => {
     const m = extendContent(UnitType, 'invincible-ship', {});
 
-    m.abilities.add(new RepairFieldAbility(Infinity, 60, 60));
+    m.abilities.add(new RepairFieldAbility(Infinity, Infinity, 1));
     // m.abilities.add(new JavaAdapter(ForceFieldAbility, {}, 60, Infinity, Infinity, 300));
     m.abilities.add(InvincibleForceFieldAbility(60, Infinity, Infinity, 300));
     m.constructor = prov(() => extend(UnitTypes.alpha.constructor.get().class, {
         damage(amount) { },
     }));
+    m.defaultController = prov(() => new BuilderAI());
 
     m.weapons.add(invincibleWeapon);
     m.flying = true;
     m.speed = 120;
+    m.hitSize = 12;
     m.accel = 0.01;
     m.rotateSpeed = 20;
     m.baseRotateSpeed = 20;
@@ -105,7 +115,7 @@ const mech = (() => {
     m.payloadCapacity = (200 * 200) * (8 * 8);
     m.ammoCapacity = 200000000;
     m.ammoResupplyAmount = 1;
-    m.commandLimit = 16;
+    m.commandLimit = 30;
     // m.weaponOffsetY = -2;
     // m.weaponOffsetX = 5;
 

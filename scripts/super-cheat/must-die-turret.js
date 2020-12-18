@@ -22,6 +22,11 @@ const destoryBeamBulletType = (() => {
         });
 
         const bt = extend(BasicBulletType, {
+            hitEntity(b, other, initialHealth) {
+                if (other && other.kill) {
+                    other.kill();
+                }
+            },
             hitTile(b, tile, health, direct) {
                 this.super$hitTile(b, tile, health, direct);
                 if (tile && tile.team != b.team) {
