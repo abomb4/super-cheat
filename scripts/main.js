@@ -17,6 +17,7 @@ require('super-cheat/chrono-unloader')
 require('super-cheat/chrono-pusher')
 require('super-cheat/turret-turret')
 require('super-cheat/unit-factory')
+require('super-cheat/team-changer')
 
 // Events.on(EventType.ClientLoadEvent, cons(e => {
 
