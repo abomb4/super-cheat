@@ -26,6 +26,7 @@ const InvincibleForceFieldAbility = (radius, regen, max, cooldown) => {
             paramField = this;
             Groups.bullet.intersect(unit.x - realRad, unit.y - realRad, realRad * 2, realRad * 2, shieldConsumer);
             this.super$update(unit);
+            unit.shield = Infinity;
         },
         copy() {
             return InvincibleForceFieldAbility(radius, regen, max, cooldown);
@@ -83,7 +84,7 @@ const invincibleWeapon = (() => {
 const mech = (() => {
     const m = extendContent(UnitType, 'invincible-ship', {});
 
-    m.abilities.add(new RepairFieldAbility(Infinity, Infinity, 1));
+    m.abilities.add(new RepairFieldAbility(Infinity, 60, 8 * 8));
     // m.abilities.add(new JavaAdapter(ForceFieldAbility, {}, 60, Infinity, Infinity, 300));
     m.abilities.add(InvincibleForceFieldAbility(60, Infinity, Infinity, 300));
     m.constructor = prov(() => extend(UnitTypes.alpha.constructor.get().class, {
