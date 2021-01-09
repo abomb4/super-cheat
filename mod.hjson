@@ -30,5 +30,5 @@ Features:
 - 单位工厂（可以给敌人出兵）
 
 '''
-version: 2.7.0
+version: 2.7.1
 minGameVersion: 121

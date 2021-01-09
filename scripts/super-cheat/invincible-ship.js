@@ -21,17 +21,20 @@ const InvincibleForceFieldAbility = (radius, regen, max, cooldown) => {
 
     const ability = new JavaAdapter(ForceFieldAbility, {
         update(unit) {
+            unit.shield = Infinity;
+            this.radiusScale = Mathf.lerpDelta(this.radiusScale, 1, 0.06)
             realRad = this.radiusScale * this.radius;
             paramUnit = unit;
             paramField = this;
             Groups.bullet.intersect(unit.x - realRad, unit.y - realRad, realRad * 2, realRad * 2, shieldConsumer);
-            this.super$update(unit);
-            unit.shield = Infinity;
+            this.alpha = Math.max(this.alpha - Time.delta / 10, 0);
         },
         copy() {
             return InvincibleForceFieldAbility(radius, regen, max, cooldown);
         },
-        draw(unit) { this.super$draw(unit); },
+        draw(unit) {
+            this.super$draw(unit);
+        },
     }, radius, regen, max, cooldown);
 
     return ability;
