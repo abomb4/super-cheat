@@ -228,7 +228,7 @@ const landConstructor = prov(() => new JavaAdapter(MechUnit, {
             font.draw("Hits: " + hits,                              x, (y -= 3), color, fontSize, false, Align.left)
             font.draw("Duration(frame): " + keep3(gameDuration),    x, (y -= 3), color, fontSize, false, Align.left)
             font.draw("Duration(real): " + keep3(realDuration),     x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("Origin damange: " + keep3(originDamage),     x, (y -= 3), color, fontSize, false, Align.left)
+            font.draw("Origin damage: " + keep3(originDamage),     x, (y -= 3), color, fontSize, false, Align.left)
             font.draw("Real damage: " + keep3(realDamage),          x, (y -= 3), color, fontSize, false, Align.left)
             font.draw("DPS origin: " + keep3(originDps),            x, (y -= 3), color, fontSize, false, Align.left)
             font.draw("DPS real: " + keep3(realDps),                x, (y -= 3), color, fontSize, false, Align.left)
