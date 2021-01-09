@@ -155,7 +155,7 @@ const turret = extendContent(Turret, 'must-die-turret', {
     },
     // generateIcons(){
     //     const list = this.super$generateIcons();
-    //     list[0] = Core.atlas.find(lib.aModName + "-must-die-turret-base");
+    //     list[0] = Core.atlas.find(lib.modName + "-must-die-turret-base");
     //     list[1] = Core.atlas.find(this.name);
     //     return list;
     // },

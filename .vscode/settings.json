@@ -1,0 +1,8 @@
+{
+    "licenser.license": "GPLv3",
+    "licenser.author": "abomb4",
+    "licenser.projectName": "Dimension Shard",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifierEnding": "index",
+    "javascript.updateImportsOnFileMove.enabled": "never"
+}

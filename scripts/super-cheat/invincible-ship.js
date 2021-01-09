@@ -72,7 +72,7 @@ const invincibleWeapon = (() => {
 
     const w = extend(Weapon, {});
 
-    w.name = lib.aModName + '-' + 'invincible-ship-weapon';
+    w.name = lib.modName + '-' + 'invincible-ship-weapon';
     w.length = 1.5;
     w.reload = 7;
     // w.ejectEffect = Fx.shellEjectSmall;

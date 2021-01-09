@@ -16,7 +16,7 @@ exports.loadSound = function (name, setter) {
     });
 }
 
-exports.aModName = "invincible-cheat-mod-v6";
+exports.modName = "invincible-cheat-mod-v6";
 
 exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 
@@ -27,9 +27,20 @@ exports.func = (getter) => new Func({
     get: getter
 });
 
-exports.loadRegion = function(name) {
-    return Core.atlas.find(exports.aModName + '-' + name, Core.atlas.find("clear"))
-}
+const loadRegionCache = {};
+exports.loadRegion = (name) => {
+    if (Vars.headless === true) {
+        return null
+    }
+    var c = loadRegionCache[name]
+    if (c) {
+        return c
+    }
+    c = Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("error"))
+    print('find ' + exports.modName + '-' + name + ' result: ' + c)
+    loadRegionCache[name] = c
+    return c
+};
 
 /**
  * @param {Block} blockType The block type
@@ -56,7 +67,7 @@ exports.setBuildingSimple = function(blockType, buildingType, overrides) {
  * @param
  */
 exports.getMessage = function(type, key) {
-    return Core.bundle.get(type + "." + exports.aModName + "." + key);
+    return Core.bundle.get(type + "." + exports.modName + "." + key);
 }
 
 exports.int = (v) => new java.lang.Integer(v);

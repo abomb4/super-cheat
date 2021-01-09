@@ -16,6 +16,7 @@ require('super-cheat/adjustable-overdrive-projector')
 require('super-cheat/chrono-unloader')
 require('super-cheat/chrono-pusher')
 require('super-cheat/turret-turret')
+require('super-cheat/dps-tester-unit')
 require('super-cheat/unit-factory')
 require('super-cheat/team-changer')
 

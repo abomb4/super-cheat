@@ -140,14 +140,14 @@ const healBeam = (() => {
 
 const terminatorMainWeapon = (() => {
 
-    const fullName = lib.aModName + '-' + 'super-heal-beam-weapon';
+    const fullName = lib.modName + '-' + 'super-heal-beam-weapon';
     const w = extend(Weapon, {
         load() {
             // Add a prefix prevent confliction with other mods
             this.name = fullName;
             this.super$load();
 
-            // const assetName = lib.aModName + '-' + this.name;
+            // const assetName = lib.modName + '-' + this.name;
             // this.region = Core.atlas.find(
             //     assetName + "-equip",
             //     Core.atlas.find(assetName + "-equip", Core.atlas.find("clear"))
@@ -227,10 +227,10 @@ const lancerLaserWeapon = (() => {
     const w = extend(Weapon, {
         load() {
             // Add a prefix prevent confliction with other mods
-            this.name = lib.aModName + '-' + 'super-cheat-lancer-weapon';
+            this.name = lib.modName + '-' + 'super-cheat-lancer-weapon';
             this.super$load();
 
-            // const assetName = lib.aModName + '-' + this.name;
+            // const assetName = lib.modName + '-' + this.name;
             // this.region = Core.atlas.find(
             //     assetName + "-equip",
             //     Core.atlas.find(assetName + "-equip", Core.atlas.find("clear"))
@@ -239,7 +239,7 @@ const lancerLaserWeapon = (() => {
         },
     });
 
-    w.name = lib.aModName + '-' + 'super-cheat-lancer-weapon';
+    w.name = lib.modName + '-' + 'super-cheat-lancer-weapon';
     w.bullet = lancerLaser2;
     w.inaccuracy = 0;
     w.shots = 1;
