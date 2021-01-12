@@ -209,9 +209,10 @@ const landConstructor = prov(() => new JavaAdapter(MechUnit, {
         if (this.dmgRecord.showBoardTime > 0) {
             const font = Fonts.def
             var color = Color.yellow.cpy()
-            const fontSize = 0.18
+            const fontSize = 12 / 60
+            const gap = Vars.mobile ? fontSize / 0.04 : fontSize / 0.06
             const x = this.x - 20
-            var y = this.y + 40
+            var y = this.y + (Vars.mobile ? 52 : 40)
 
             var hits = this.dmgRecord.hits
             var gameDuration = this.dmgRecord.lastHitTime - this.dmgRecord.firstHitTime
@@ -223,15 +224,15 @@ const landConstructor = prov(() => new JavaAdapter(MechUnit, {
 
             Draw.z(Layer.weather + 1)
             color.a = Math.min(this.dmgRecord.showBoardTime / boardTimeTotal * 3, 1)
-            font.draw("Armor: " + this.armor,                       x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("HitSize: " + this.hitSize,                   x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("Hits: " + hits,                              x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("Duration(frame): " + keep3(gameDuration),    x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("Duration(real): " + keep3(realDuration),     x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("Origin damage: " + keep3(originDamage),     x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("Real damage: " + keep3(realDamage),          x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("DPS origin: " + keep3(originDps),            x, (y -= 3), color, fontSize, false, Align.left)
-            font.draw("DPS real: " + keep3(realDps),                x, (y -= 3), color, fontSize, false, Align.left)
+            font.draw("Armor: " + this.armor,                       x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("HitSize: " + this.hitSize,                   x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("Hits: " + hits,                              x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("Duration(frame): " + keep3(gameDuration),    x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("Duration(real): " + keep3(realDuration),     x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("Origin damage: " + keep3(originDamage),      x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("Real damage: " + keep3(realDamage),          x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("DPS origin: " + keep3(originDps),            x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw("DPS real: " + keep3(realDps),                x, (y -= gap), color, fontSize, false, Align.left)
             Draw.reset()
         }
     },
