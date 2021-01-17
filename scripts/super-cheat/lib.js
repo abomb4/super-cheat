@@ -37,7 +37,7 @@ exports.loadRegion = (name) => {
         return c
     }
     c = Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("error"))
-    print('find ' + exports.modName + '-' + name + ' result: ' + c)
+    // print('find ' + exports.modName + '-' + name + ' result: ' + c)
     loadRegionCache[name] = c
     return c
 };
