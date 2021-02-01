@@ -10,7 +10,6 @@
     "drillEffect": "none",
     "updateEffect": "none",
     "rotateSpeed": 8,
-    "drawMineItem": false,
     "consumes": {
         "liquid": {
             "liquid": "water",
