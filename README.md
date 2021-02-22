@@ -18,6 +18,9 @@ Features:
 - Invincible Wall, Invincible Force Projector
 - Several strange force projectors
 - Chronosphere Unloader and Pusher
+- Unit Factory
+- DPS Tester Unit
+- Team Changer
 
 这是个作弊 mod，会降低游戏体验，请谨慎使用。
 主要特性：
@@ -27,3 +30,6 @@ Features:
 - 无敌围墙，无敌力场
 - 一大堆神奇力场
 - 时空提取器、时空推送器
+- 单位工厂
+- DPS 测试单位
+- 队伍更换器
