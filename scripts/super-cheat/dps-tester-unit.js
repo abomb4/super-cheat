@@ -224,15 +224,17 @@ const landConstructor = prov(() => new JavaAdapter(MechUnit, {
 
             Draw.z(Layer.weather + 1)
             color.a = Math.min(this.dmgRecord.showBoardTime / boardTimeTotal * 3, 1)
-            font.draw("Armor: " + this.armor,                       x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("HitSize: " + this.hitSize,                   x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("Hits: " + hits,                              x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("Duration(frame): " + keep3(gameDuration),    x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("Duration(real): " + keep3(realDuration),     x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("Origin damage: " + keep3(originDamage),      x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("Real damage: " + keep3(realDamage),          x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("DPS origin: " + keep3(originDps),            x, (y -= gap), color, fontSize, false, Align.left)
-            font.draw("DPS real: " + keep3(realDps),                x, (y -= gap), color, fontSize, false, Align.left)
+			
+			const s = "message.invincible-cheat-mod-v6.dps-info-";
+            font.draw(Core.bundle.format(s + "armor", this.armor),                   x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "hitsize", this.hitSize),               x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "hits", hits),                          x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "duration-frame", keep3(gameDuration)), x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "duration-real", keep3(realDuration)),  x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "origin-damage", keep3(originDamage)),  x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "real-damage", keep3(realDamage)),      x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "dps-origin", keep3(originDps)),        x, (y -= gap), color, fontSize, false, Align.left)
+            font.draw(Core.bundle.format(s + "dps-real", keep3(realDps)),            x, (y -= gap), color, fontSize, false, Align.left)
             Draw.reset()
         }
     },
