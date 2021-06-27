@@ -46,11 +46,9 @@ const invincibleBulletType = (() => {
         hitEntity(b, other, initialHealth) {
             if (other && other.kill) {
                 other.kill();
-                if (!other.dead && !net.client()) {
+                if (!other.dead && !Vars.net.client()) {
                     other.health = 0
                     other.dead = true
-                    other.clearCommand()
-                    other.destory()
                     Call.unitDeath(other.id)
                 }
             }
