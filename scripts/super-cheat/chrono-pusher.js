@@ -36,6 +36,9 @@ const blockType = extendContent(StorageBlock, "chrono-pusher", {
         bottomRegion = lib.loadRegion("chrono-pusher-bottom");
         rotatorRegion = lib.loadRegion("chrono-pusher-rotator");
     },
+    drawPlace(x, y, rotation, valid) {
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
+    },
     setBars() {
         this.super$setBars();
 
@@ -48,22 +51,19 @@ const blockType = extendContent(StorageBlock, "chrono-pusher", {
     outputsItems() {
         return false;
     },
-    drawPlace(x, y, rotation, valid) {
-        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
-    },
     pointConfig(config, transformer) {
         // Rotate relative points
         if (IntSeq.__javaObject__.isInstance(config)) {
             // ROTATE IT!
-            var newSeq = new IntSeq(config.size);
-            var linkX = null;
-            for (var i = 0; i < config.size; i++) {
-                var num = config.get(i);
+            let newSeq = new IntSeq(config.size);
+            let linkX = null;
+            for (let i = 0; i < config.size; i++) {
+                let num = config.get(i);
                 if (linkX == null) {
                     linkX = num;
                 } else {
                     // The source position is relative to right bottom, transform it.
-                    var point = new Point2(linkX * 2 - 1, num * 2 - 1);
+                    let point = new Point2(linkX * 2 - 1, num * 2 - 1);
 
                     transformer.get(point);
                     newSeq.add((point.x + 1) / 2);
@@ -86,14 +86,14 @@ blockType.itemCapacity = 100;
 blockType.noUpdateDisabled = true;
 blockType.config(IntSeq, lib.cons2((tile, sq) => {
     // This seems only used by coping block
-    var links = new Seq(java.lang.Integer);
-    var linkX = null;
-    for (var i = 0; i < sq.size; i++) {
-        var num = sq.get(i);
+    let links = new Seq(java.lang.Integer);
+    let linkX = null;
+    for (let i = 0; i < sq.size; i++) {
+        let num = sq.get(i);
         if (linkX == null) {
             linkX = num;
         } else {
-            var pos = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
+            let pos = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
             links.add(lib.int(pos));
             linkX = null;
         }
@@ -108,87 +108,180 @@ blockType.configClear(tile => {
     tile.setLink(null);
 });
 
+const rdcGroup = new EntityGroup(Building, false, false);
 blockType.buildType = prov(() => {
 
-    var links = new Seq(java.lang.Integer);
-    var warmup = 0;
-    var rotateDeg = 0;
-    var rotateSpeed = 0;
+    const MAX_LOOP = 50;
+    const FRAME_DELAY = 5;
+    const timer = new Interval(6)
+    let links = new Seq(java.lang.Integer);
+    let deadLinks = new Seq(java.lang.Integer);
+    let warmup = 0;
+    let rotateDeg = 0;
+    let rotateSpeed = 0;
 
-    var fairLoopOffset = 0;
-    function updateFairLoopOffset(max) {
-        fairLoopOffset++;
-        if (fairLoopOffset >= max) {
-            fairLoopOffset = 0;
+    let consValid = false;
+    let itemSent = false;
+
+    const looper = (() => {
+        let index = 0;
+
+        return {
+            next(max) {
+                if (index < 0) {
+                    index = max - 1;
+                }
+                let v = index;
+                index -= 1;
+                return v;
+            },
         }
-    }
-    function fairLoopIndex(i, max, offset) {
-        return (i + offset) % max;
-    }
+    })();
 
+    function linkValidTarget(the, target) {
+        return target && target.team == the.team && the.within(target, range);
+    }
 
     function linkValid(the, pos) {
         if (pos === undefined || pos === null || pos == -1) return false;
-        var linkTarget = Vars.world.build(pos);
-        return linkTarget && linkTarget.team == the.team && the.within(linkTarget, range);
+        let linkTarget = Vars.world.build(pos);
+        return linkValidTarget(the, linkTarget);
     }
 
+    const tmpWhatHave = [];
     return new JavaAdapter(StorageBlock.StorageBuild, {
         getLink() { return links; },
-        setLink(v) { links = v; },
+        setLink(v) {
+            links = v;
+            for (let i = links.size - 1; i >= 0; i--) {
+                let link = links.get(i);
+                let linkTarget = Vars.world.build(link);
+                if (!linkValidTarget(this, linkTarget)) {
+                    links.remove(i);
+                } else {
+                    links.set(i, lib.int(linkTarget.pos()));
+                }
+            }
+        },
         setOneLink(v) {
-            var int = new java.lang.Integer(v);
+            let int = new java.lang.Integer(v);
             if (!links.remove(boolf(i => i == int))) {
                 links.add(int);
             }
         },
-        acceptItem(source, item) {
-            return this.items.get(item) < this.getMaximumAccepted(item);
+        deadLink(v) {
+            // Move to dead link when block disappeared
+            if (Vars.net.client()) { return; }
+            let int = new java.lang.Integer(v);
+            if (links.contains(boolf(i => i == int))) {
+                this.configure(int);
+            }
+            deadLinks.add(int);
+            if (deadLinks.size >= 50) {
+                deadLinks.removeRange(0, 25);
+            }
         },
-        updateTile() {
-            var itemSent = false;
-            for (var iloop = 0; iloop < links.size; iloop++) {
-                var i = fairLoopIndex(iloop, links.size, fairLoopOffset);
-                var pos = links.get(i);
-                if (linkValid(this, pos)) {
-                    var linkTarget = Vars.world.build(pos);
-                    links.set(i, new java.lang.Integer(linkTarget.pos()));
-                    for (var ii = 0; ii < Vars.content.items().size; ii++) {
-                        var item = Vars.content.item(ii);
-                        if (linkTarget.team == this.team && this.items.has(item) && linkTarget.acceptItem(this, item) && this.canDump(linkTarget, item)) {
-                            linkTarget.handleItem(this, item);
-                            this.items.remove(item, 1);
-                            itemSent = true;
-                            break;
-                        }
+        tryResumeDeadLink(v) {
+            if (Vars.net.client()) { return; }
+            let int = new java.lang.Integer(v);
+            if (!deadLinks.remove(boolf(i => i == int))) {
+                return;
+            }
+            let linkTarget = Vars.world.build(int);
+            if (linkValid(this, int)) {
+                this.configure(new java.lang.Integer(linkTarget.pos()));
+            }
+        },
+        sendItems(target, whatIHave) {
+            let s = false;
+            for (let i = whatIHave.length - 1; i >= 0; i--) {
+                let have = whatIHave[i];
+                let item = have.item;
+                let count = have.count;
+                let accept = Math.min(count, target.acceptStack(item, Math.min(count, FRAME_DELAY), this));
+                if (accept > 0) {
+                    s = true;
+                    target.handleStack(item, accept, this);
+                    this.items.remove(item, accept);
+                    have.count -= accept;
+                    if (have.count <= 0) {
+                        whatIHave.splice(i, 1);
                     }
-                } else {
-                    // it.remove();
                 }
             }
-            warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
-            rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
+            return s;
+        },
+        updateTile() {
+            tmpWhatHave.splice(0, tmpWhatHave.length);
+            if (timer.get(1, FRAME_DELAY)) {
+                itemSent = false;
+                consValid = this.consValid();
+                if (consValid) {
+                    // Build what I have
+                    for (let i = 0; i < Vars.content.items().size; i++) {
+                        let item = Vars.content.items().get(i);
+                        let count = this.items.get(item);
+                        if (count > 0) {
+                            tmpWhatHave.push({item: item, count: count});
+                        }
+                    }
+                    // Loop connections
+                    let max = links.size;
+                    for (let i = 0; i < Math.min(MAX_LOOP, max); i++) {
+                        let index = looper.next(max);
+                        let pos = links.get(index);
+                        if (pos === undefined || pos === null || pos == -1) {
+                            this.configure(lib.int(pos));
+                            continue;
+                        }
+                        let linkTarget = Vars.world.build(pos);
+                        if (!linkValidTarget(this, linkTarget)) {
+                            this.deadLink(pos);
+                            max -= 1;
+                            if (max <= 0) {
+                                break;
+                            }
+                            continue;
+                        }
+                        if (this.sendItems(linkTarget, tmpWhatHave)) {
+                            itemSent = true;
+                        }
+                    }
+                }
+            }
+            if (consValid) {
+                warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
+                rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
+            } else {
+                warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
+                rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, warmupSpeed);
+            }
             if (warmup > 0) {
                 rotateDeg += rotateSpeed;
             }
-            updateFairLoopOffset(links.size);
         },
         drawConfigure() {
             const tilesize = Vars.tilesize;
-            var sin = Mathf.absin(Time.time, 6, 1);
+            let sin = Mathf.absin(Time.time, 6, 1);
 
             Draw.color(Pal.accent);
             Lines.stroke(1);
             Drawf.circles(this.x, this.y, (this.tile.block().size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
 
-            for (var i = 0; i < links.size; i++) {
-                var pos = links.get(i);
+            for (let i = 0; i < links.size; i++) {
+                let pos = links.get(i);
                 if (linkValid(this, pos)) {
-                    var linkTarget = Vars.world.build(pos);
+                    let linkTarget = Vars.world.build(pos);
                     Drawf.square(linkTarget.x, linkTarget.y, linkTarget.block.size * tilesize / 2 + 1, Pal.place);
                 }
             }
             Drawf.dashCircle(this.x, this.y, range, Pal.accent);
+
+            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
+                Time.run(Mathf.random(10), run(() => {
+                    inEffect.at(this.x, this.y, 0);
+                }));
+            }
         },
         draw() {
             this.super$draw();
@@ -201,12 +294,6 @@ blockType.buildType = prov(() => {
 
             Draw.alpha(1);
             Draw.rect(topRegion, this.x, this.y);
-
-            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
-                Time.run(Mathf.random(10), run(() => {
-                    inEffect.at(this.x, this.y, 0);
-                }));
-            }
         },
         display(table) {
             this.super$display(table);
@@ -214,11 +301,11 @@ blockType.buildType = prov(() => {
                 table.row();
                 table.left();
                 table.table(cons(l => {
-                    var map = new ObjectMap();
+                    let map = new ObjectMap();
                     l.update(run(() => {
                         l.clearChildren();
                         l.left();
-                        var seq = new Seq(Item);
+                        let seq = new Seq(Item);
                         this.items.each(new ItemModule.ItemConsumer({
                             accept(item, amount) {
                                 map.put(item, amount);
@@ -246,32 +333,55 @@ blockType.buildType = prov(() => {
             return true;
         },
         config() {
-            var output = new IntSeq(links.size * 2);
+            let output = new IntSeq(links.size * 2);
             // This seems called by coping block
-            for (var i = 0; i < links.size; i++) {
-                var pos = links.get(i);
-                var point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
+            for (let i = 0; i < links.size; i++) {
+                let pos = links.get(i);
+                let point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
                 output.add(point2.x, point2.y);
             }
             return output;
         },
+        acceptStack(item, amount, source) {
+            return this.linkedCore == null ?
+                this.super$acceptStack(item, amount, source) :
+                this.linkedCore.acceptStack(item, amount, source);
+        },
+        add() {
+            if (this.added) { return; }
+            rdcGroup.add(this);
+            this.super$add();
+        },
+        remove() {
+            if (!this.added) { return; }
+            rdcGroup.remove(this);
+            this.super$remove();
+        },
         write(write) {
             this.super$write(write);
             write.s(links.size);
-            var it = links.iterator();
+            let it = links.iterator();
             while (it.hasNext()) {
-                var pos = it.next();
+                let pos = it.next();
                 write.i(pos);
             }
         },
         read(read, revision) {
             this.super$read(read, revision);
             links = new Seq(java.lang.Integer);
-            var linkSize = read.s();
-            for (var i = 0; i < linkSize; i++) {
-                var pos = read.i();
+            let linkSize = read.s();
+            for (let i = 0; i < linkSize; i++) {
+                let pos = read.i();
                 links.add(new java.lang.Integer(pos));
             }
         },
     }, blockType);
 });
+
+Events.on(BlockBuildEndEvent, cons(e => {
+    if (!e.breaking) {
+        rdcGroup.each(cons(cen => {
+            cen.tryResumeDeadLink(e.tile.pos());
+        }));
+    }
+}));
