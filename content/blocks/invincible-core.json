@@ -4,8 +4,8 @@
     "unloadable": true,
     "breakable": true,
     "rebuildable": false,
-    "health": 1000,
-    "itemCapacity": 100000,
+    "health": 1000000000000,
+    "itemCapacity": 100000000000,
     "requirements": [],
     "category": "effect",
     "research": "cheat-item"
