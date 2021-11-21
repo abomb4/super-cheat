@@ -1,0 +1,9 @@
+{
+    "health": 64444,
+    "size": 1,
+    "requirements": [],
+    "update": true,
+    "solid": true,
+    "category": "defense",
+    "research": "dps-tester-land-factory"
+}

@@ -1,0 +1,10 @@
+{
+    "health": 64444,
+    "size": 5,
+    "requirements": [],
+    "update": true,
+    "solid": true,
+    "configurable": true,
+    "category": "defense",
+    "research": "dps-wall-5"
+}
