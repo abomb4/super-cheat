@@ -7,5 +7,6 @@
     "launchTime": 120,
     "category": "effect",
     "research": "cheat-power",
-    "requirements": []
+    "requirements": [],
+    "buildTime": "0"
 }

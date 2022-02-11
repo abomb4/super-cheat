@@ -9,5 +9,6 @@
     "shootCone": 80,
     "shootSound": "shootBig",
     "requirements": [],
-    "research": "cheat-item"
+    "research": "cheat-item",
+    "buildTime": "0"
 }

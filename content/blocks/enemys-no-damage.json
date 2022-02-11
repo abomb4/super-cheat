@@ -15,5 +15,6 @@
     "requirements": [
     ],
     "category": "effect",
-    "research": "enemys-cannot-move"
+    "research": "enemys-cannot-move",
+    "buildTime": "0"
 }

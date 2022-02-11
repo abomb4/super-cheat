@@ -9,5 +9,6 @@
     "itemCapacity": 10000,
     "requirements": [],
     "category": "effect",
-    "research": "invincible-core"
+    "research": "invincible-core",
+    "buildTime": "0"
 }

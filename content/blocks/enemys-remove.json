@@ -15,5 +15,6 @@
     "requirements": [
     ],
     "category": "effect",
-    "research": "enemys-control"
+    "research": "enemys-control",
+    "buildTime": "0"
 }

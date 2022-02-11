@@ -10,5 +10,6 @@
         "powerBuffered": 1000000
     },
     "requirements": [],
-    "research": "cheat-power"
+    "research": "cheat-power",
+    "buildTime": "0"
 }
