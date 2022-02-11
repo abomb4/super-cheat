@@ -8,5 +8,6 @@
   "configurable": true,
   "category": "effect",
   "requirements": [],
-  "research": "cheat-power"
+  "research": "cheat-power",
+  "buildTime": "0"
 }

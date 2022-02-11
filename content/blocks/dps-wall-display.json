@@ -6,5 +6,6 @@
     "solid": true,
     "configurable": true,
     "category": "defense",
-    "research": "dps-wall-5"
+    "research": "dps-wall-5",
+    "buildTime": "0"
 }

@@ -7,5 +7,6 @@
     "configurable": true,
     "category": "distribution",
     "requirements": [],
-    "research": "chrono-unloader"
+    "research": "chrono-unloader",
+    "buildTime": "0"
 }

@@ -7,5 +7,6 @@
     "configurable": true,
     "category": "distribution",
     "requirements": [],
-    "research": "cheat-item"
+    "research": "cheat-item",
+    "buildTime": "0"
 }

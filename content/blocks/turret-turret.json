@@ -10,5 +10,6 @@
     "shootCone": 80,
     "shootSound": "shoot",
     "requirements": [],
-    "research": "must-die-turret"
+    "research": "must-die-turret",
+    "buildTime": "0"
 }

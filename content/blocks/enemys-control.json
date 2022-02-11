@@ -15,5 +15,6 @@
     "requirements": [
     ],
     "category": "effect",
-    "research": "enemys-no-damage"
+    "research": "enemys-no-damage",
+    "buildTime": "0"
 }
