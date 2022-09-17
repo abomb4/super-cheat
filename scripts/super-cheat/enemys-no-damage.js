@@ -12,14 +12,14 @@ const shieldConsumer = (paramEntity) => cons(trait => {
     }
 });
 const COLOR = Pal.heal;
-const blockType = extendContent(ForceProjector, "enemys-no-damage", {});
+const blockType = extend(ForceProjector, "enemys-no-damage", {});
 lib.setBuildingSimple(blockType, ForceProjector.ForceBuild, {
     updateTile() {
-        var phaseValid = this.block.consumes.get(ConsumeType.item).valid(this);
+        var phaseValid = this.itemConsumer != null && this.itemConsumer.efficiency(this) > 0;
 
         this.phaseHeat = Mathf.lerpDelta(this.phaseHeat, Mathf.num(phaseValid), 0.1);
 
-        if (phaseValid && !this.broken && this.timer.get(blockType.timerUse, blockType.phaseUseTime) && this.efficiency() > 0) {
+        if (phaseValid && !this.broken && this.timer.get(blockType.timerUse, blockType.phaseUseTime) && this.efficiency > 0) {
             this.consume();
         }
 
@@ -29,7 +29,7 @@ lib.setBuildingSimple(blockType, ForceProjector.ForceBuild, {
             Fx.reactorsmoke.at(this.x + Mathf.range(tilesize / 2), this.y + Mathf.range(tilesize / 2));
         }
 
-        this.warmup = Mathf.lerpDelta(this.warmup, this.efficiency(), 0.1);
+        this.warmup = Mathf.lerpDelta(this.warmup, this.efficiency, 0.1);
 
         if (this.buildup > 0) {
             var scale = !this.broken ? cooldownNormal : this.cooldownBrokenBase;

@@ -29,7 +29,7 @@ const inEffect = lib.newEffect(38, e => {
     }));
 });
 
-const blockType = extendContent(StorageBlock, "chrono-pusher", {
+const blockType = extend(StorageBlock, "chrono-pusher", {
     load() {
         this.super$load();
         topRegion = lib.loadRegion("chrono-pusher-top");
@@ -42,7 +42,7 @@ const blockType = extendContent(StorageBlock, "chrono-pusher", {
     setBars() {
         this.super$setBars();
 
-        this.bars.add("capacity", lib.func((e) => new Bar(
+        this.barMap.put("capacity", lib.func((e) => new Bar(
             prov(() => Core.bundle.format("bar.capacity", UI.formatAmount(e.block.itemCapacity))),
             prov(() => Pal.items),
             floatp(() => e.items.total() / (e.block.itemCapacity * Vars.content.items().count(boolf(i => i.unlockedNow()))))
@@ -215,8 +215,9 @@ blockType.buildType = prov(() => {
             tmpWhatHave.splice(0, tmpWhatHave.length);
             if (timer.get(1, FRAME_DELAY)) {
                 itemSent = false;
-                consValid = this.consValid();
+                consValid = this.efficiency > 0;
                 if (consValid) {
+                    this.consume()
                     // Build what I have
                     for (let i = 0; i < Vars.content.items().size; i++) {
                         let item = Vars.content.items().get(i);
@@ -313,7 +314,7 @@ blockType.buildType = prov(() => {
                             }
                         }));
                         map.each(lib.cons2((item, amount) => {
-                            l.image(item.icon(Cicon.small)).padRight(3.0);
+                            l.image(item.uiIcon).padRight(3.0);
                             l.label(prov(() => '  ' + Strings.fixed(seq.contains(item) ? amount : 0, 0))).color(Color.lightGray);
                             l.row();
                         }));
@@ -321,7 +322,7 @@ blockType.buildType = prov(() => {
                 })).left();
             }
         },
-        onConfigureTileTapped(other) {
+        onConfigureBuildTapped(other) {
             if (this == other) {
                 return false;
             }

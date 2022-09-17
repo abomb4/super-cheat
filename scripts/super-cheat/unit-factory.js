@@ -5,11 +5,11 @@ var teamRegion;
 const block = extend(UnitFactory, 'unit-factory', {
     init() {
         this.plans = Vars.content.getBy(ContentType.unit)
-            .map(func(unitType => new UnitFactory.UnitPlan(unitType, 1, ItemStack.with(Items.copper, 1))))
+            .map(func(unitType => new UnitFactory.UnitPlan(unitType, 1, ItemStack.with(Items.graphite, 1))))
             .filter(boolf(plan => !plan.unit.isHidden()))
         this.super$init();
         this.itemCapacity = 1;
-        this.capacities[Items.copper.id] = 1;
+        this.capacities[Items.graphite.id] = 1;
     },
     load() {
         this.super$load();
@@ -45,7 +45,7 @@ block.config(IntSeq, lib.cons2((tile, val) => {
 }));
 const allTeams = [
     Team.derelict, Team.sharded, Team.crux,
-    Team.green, Team.purple, Team.blue,
+    Team.green, Team.blue,
 ];
 lib.setBuilding(block, (block) => {
 
@@ -68,7 +68,7 @@ lib.setBuilding(block, (block) => {
             var i = 0;
             allTeams.forEach(team => {
                 (team => {
-                    var button = cont.button(Tex.whiteui, Styles.clearToggleTransi, 24, run(() => {
+                    var button = cont.button(Tex.whiteui, Styles.clearTogglei, 24, run(() => {
                     })).group(g).get();
                     button.changed(run(() => targetTeam = (button.isChecked() ? team : null)));
                     button.getStyle().imageUp = Tex.whiteui.tint(team.color.r, team.color.g, team.color.b, team.color.a);
@@ -95,7 +95,7 @@ lib.setBuilding(block, (block) => {
         draw() {
             this.super$draw();
             Draw.color(targetTeam.color);
-            Draw.rect(teamRegion, this.x, this.y);
+            Draw.rect(lib.loadRegion('unit-factory-team'), this.x, this.y);
         },
         dumpPayload() {
             this.payload.unit.team = targetTeam;

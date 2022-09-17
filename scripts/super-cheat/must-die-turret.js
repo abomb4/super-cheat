@@ -27,10 +27,10 @@ const destoryBeamBulletType = (() => {
                     other.kill();
                 }
             },
-            hitTile(b, tile, health, direct) {
-                this.super$hitTile(b, tile, health, direct);
+            hitTile(b, tile, x, y, health, direct) {
+                this.super$hitTile(b, tile, x, y, health, direct);
                 if (tile && tile.team != b.team) {
-                    Tile.tileDestroyed(tile);
+                    tile.killed();
                 }
             },
             draw(b) {
@@ -94,10 +94,10 @@ const destoryBeamBulletType = (() => {
     });
 
     const bt = extend(BasicBulletType, {
-        hitTile(b, tile, health, direct) {
-            this.super$hitTile(b, tile, health, direct);
+        hitTile(b, tile, x, y, health, direct) {
+            this.super$hitTile(b, tile, x, y, health, direct);
             if (tile && tile.team != b.team) {
-                Tile.tileDestroyed(tile);
+                tile.killed()
             }
         },
         draw(b) {
@@ -148,7 +148,7 @@ const destoryBeamBulletType = (() => {
     return bt;
 })();
 
-const turret = extendContent(Turret, 'must-die-turret', {
+const turret = extend(Turret, 'must-die-turret', {
     load() {
         this.super$load();
         this.baseRegion = lib.loadRegion("must-die-turret-base");

@@ -53,10 +53,10 @@ const invincibleBulletType = (() => {
                 }
             }
         },
-        hitTile(b, tile, health, direct) {
-            this.super$hitTile(b, tile, health, direct);
+        hitTile(b, tile, x, y, health, direct)  {
+            this.super$hitTile(b, tile, x, y, health, direct) ;
             if (tile) {
-                Tile.tileDestroyed(tile);
+                tile.killed()
             }
         },
     });
@@ -90,7 +90,7 @@ const invincibleWeapon = (() => {
 })();
 
 const mech = (() => {
-    const m = extendContent(UnitType, 'invincible-ship', {});
+    const m = extend(UnitType, 'invincible-ship', {});
 
     m.abilities.add(new RepairFieldAbility(Infinity, 60, 8 * 8));
     // m.abilities.add(new JavaAdapter(ForceFieldAbility, {}, 60, Infinity, Infinity, 300));
@@ -127,6 +127,9 @@ const mech = (() => {
     m.commandLimit = 30;
     // m.weaponOffsetY = -2;
     // m.weaponOffsetX = 5;
+    m.coreUnitDock = true;
+    m.mineWalls = true;
+    m.envDisabled = 0;
 
     return m;
 })();

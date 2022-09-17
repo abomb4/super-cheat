@@ -217,7 +217,7 @@ function defineBlockBullet(type, options, rewrites) {
     return t;
 }
 
-const tt = extendContent(Turret, 'turret-turret', {
+const tt = extend(Turret, 'turret-turret', {
     load() {
         this.super$load();
         this.region = lib.loadRegion("turret-turret")

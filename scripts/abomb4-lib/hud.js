@@ -230,7 +230,7 @@ var leftFrag = (fragConfig) => {
                                     }
                                     var category = cs[i];
                                     (cc => {
-                                        table.button(category.icon(), Styles.clearToggleTransi, run(() => {
+                                        table.button(category.icon(), Styles.clearTogglei, run(() => {
                                             currentCategory = cc;
                                             if (Vars.control.input.block != null) {
                                                 Vars.control.input.block = getSelectedBlock(currentCategory);

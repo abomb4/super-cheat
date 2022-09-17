@@ -148,17 +148,17 @@ lib.setBuildingSimple(landFactory, UnitFactory.UnitFactoryBuild, {
         this.super$updateTile()
     },
     buildConfiguration(table) {
-        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up1")), Styles.clearTransi, run(() => {
+        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up1")), Styles.cleari, run(() => {
             CALL_setArmor(landFactory.currentArmor + 1)
         })).size(40).tooltip(lib.getMessage("message", "dps-armor-up"))
-        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("down1")), Styles.clearTransi, run(() => {
+        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("down1")), Styles.cleari, run(() => {
             CALL_setArmor(landFactory.currentArmor - 1)
         })).size(40).tooltip(lib.getMessage("message", "dps-armor-down"))
 
-        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up2")), Styles.clearTransi, run(() => {
+        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("up2")), Styles.cleari, run(() => {
             CALL_setHitSize(landFactory.currentHitSize + 1)
         })).size(40).tooltip(lib.getMessage("message", "dps-hitsize-up"))
-        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("down2")), Styles.clearTransi, run(() => {
+        table.button(new Packages.arc.scene.style.TextureRegionDrawable(lib.loadRegion("down2")), Styles.cleari, run(() => {
             CALL_setHitSize(landFactory.currentHitSize - 1)
         })).size(40).tooltip(lib.getMessage("message", "dps-hitsize-down"))
     },
@@ -224,8 +224,8 @@ const landConstructor = prov(() => new JavaAdapter(MechUnit, {
 
             Draw.z(Layer.weather + 1)
             color.a = Math.min(this.dmgRecord.showBoardTime / boardTimeTotal * 3, 1)
-			
-			const s = "message.invincible-cheat-mod-v6.dps-info-";
+
+			const s = "message.invincible-cheat-mod-v7.dps-info-";
             font.draw(Core.bundle.format(s + "armor", this.armor),                   x, (y -= gap), color, fontSize, false, Align.left)
             font.draw(Core.bundle.format(s + "hitsize", this.hitSize),               x, (y -= gap), color, fontSize, false, Align.left)
             font.draw(Core.bundle.format(s + "hits", hits),                          x, (y -= gap), color, fontSize, false, Align.left)
@@ -270,7 +270,7 @@ const landConstructor = prov(() => new JavaAdapter(MechUnit, {
 }))
 EntityMapping.idMap[landClassId] = landConstructor
 const landUnitType = (() => {
-    const m = extendContent(UnitType, 'dps-tester-land', {
+    const m = extend(UnitType, 'dps-tester-land', {
     })
 
     m.constructor = landConstructor
@@ -298,9 +298,11 @@ const landUnitType = (() => {
     m.engineOffset = 12
     m.engineSize = 6
     m.lowAltitude = true
+    m.mineWalls = true;
+    m.envDisabled = 0;
     return m
 })()
 
 landFactory.plans = Seq.with(
-    new UnitFactory.UnitPlan(landUnitType, 1, ItemStack.with(Items.copper, 1))
+    new UnitFactory.UnitPlan(landUnitType, 1, ItemStack.with(Items.graphite, 1))
 )

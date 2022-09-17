@@ -1,12 +1,12 @@
 const lib = require('super-cheat/lib')
 
-lib.setBuilding(extendContent(Block, "next-wave", {}), (block) => extend(Building, {
+lib.setBuilding(extend(Block, "next-wave", {}), (block) => extend(Building, {
     //override the method to build configuration
     buildConfiguration(table) {
-        table.button(Icon.upOpen, Styles.clearTransi, run(() => {
+        table.button(Icon.upOpen, Styles.cleari, run(() => {
             this.configure(0)
         })).size(50).tooltip(lib.getMessage("message", "next-wave-1"));
-        table.button(Icon.warningSmall, Styles.clearTransi, run(() => {
+        table.button(Icon.warningSmall, Styles.cleari, run(() => {
             this.configure(1)
         })).size(50).tooltip(lib.getMessage("message", "next-wave-10"));
     },

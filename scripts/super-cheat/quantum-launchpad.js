@@ -1,7 +1,7 @@
 const lib = require('super-cheat/lib')
 
 const evilNumber = 10000;
-var blockType = extendContent(LaunchPad, "quantum-launchpad", {});
+var blockType = extend(LaunchPad, "quantum-launchpad", {});
 
 lib.setBuildingSimple(blockType, LaunchPad.LaunchPadBuild, {
 

@@ -41,7 +41,7 @@ const healed = new IntSet();
 
     const INIT_MASK = 1000000;
 
-    var blockType = extendContent(Block, "adjustable-overdrive-projector", {
+    var blockType = extend(Block, "adjustable-overdrive-projector", {
         load() {
             up1 =   lib.loadRegion("up1");
             up2 =   lib.loadRegion("up2");
@@ -85,15 +85,15 @@ const healed = new IntSet();
                 Core.app.post(run(() => this.configure(lastNumber + INIT_MASK)));
             },
             buildConfiguration(table) {
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up1), Styles.clearTransi, run(() => { this.configure(0) })).size(40).tooltip(lib.getMessage("message", "projector-up-1"));
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up2), Styles.clearTransi, run(() => { this.configure(1) })).size(40).tooltip(lib.getMessage("message", "projector-up-2"));
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up3), Styles.clearTransi, run(() => { this.configure(2) })).size(40).tooltip(lib.getMessage("message", "projector-up-3"));
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up4), Styles.clearTransi, run(() => { this.configure(3) })).size(40).tooltip(lib.getMessage("message", "projector-up-4"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up1), Styles.cleari, run(() => { this.configure(0) })).size(40).tooltip(lib.getMessage("message", "projector-up-1"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up2), Styles.cleari, run(() => { this.configure(1) })).size(40).tooltip(lib.getMessage("message", "projector-up-2"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up3), Styles.cleari, run(() => { this.configure(2) })).size(40).tooltip(lib.getMessage("message", "projector-up-3"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(up4), Styles.cleari, run(() => { this.configure(3) })).size(40).tooltip(lib.getMessage("message", "projector-up-4"));
                 table.row();
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down1), Styles.clearTransi, run(() => { this.configure(100) })).size(40).tooltip(lib.getMessage("message", "projector-down-1"));
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down2), Styles.clearTransi, run(() => { this.configure(101) })).size(40).tooltip(lib.getMessage("message", "projector-down-2"));
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down3), Styles.clearTransi, run(() => { this.configure(102) })).size(40).tooltip(lib.getMessage("message", "projector-down-3"));
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down4), Styles.clearTransi, run(() => { this.configure(103) })).size(40).tooltip(lib.getMessage("message", "projector-down-4"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down1), Styles.cleari, run(() => { this.configure(100) })).size(40).tooltip(lib.getMessage("message", "projector-down-1"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down2), Styles.cleari, run(() => { this.configure(101) })).size(40).tooltip(lib.getMessage("message", "projector-down-2"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down3), Styles.cleari, run(() => { this.configure(102) })).size(40).tooltip(lib.getMessage("message", "projector-down-3"));
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(down4), Styles.cleari, run(() => { this.configure(103) })).size(40).tooltip(lib.getMessage("message", "projector-down-4"));
             },
             configured(player, value) {
                 // 小于 100 视为减小命令，大于 1000000（七位数）视为初始化

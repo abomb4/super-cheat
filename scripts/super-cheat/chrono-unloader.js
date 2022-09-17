@@ -30,7 +30,7 @@ const outEffect = lib.newEffect(38, e => {
     }));
 });
 
-const blockType = extendContent(StorageBlock, "chrono-unloader", {
+const blockType = extend(StorageBlock, "chrono-unloader", {
     load() {
         this.super$load();
         topRegion = lib.loadRegion("chrono-unloader-top");
@@ -49,12 +49,12 @@ const blockType = extendContent(StorageBlock, "chrono-unloader", {
     setBars() {
         this.super$setBars();
 
-        this.bars.add("capacity", lib.func((e) => new Bar(
+        this.barMap.put("capacity", lib.func((e) => new Bar(
             prov(() => Core.bundle.format("bar.capacity", UI.formatAmount(e.block.itemCapacity))),
             prov(() => Pal.items),
             floatp(() => e.items.total() / (e.block.itemCapacity * Vars.content.items().count(boolf(i => i.unlockedNow()))))
         )));
-        this.bars.add("connections", lib.func((e) => new Bar(
+        this.barMap.put("connections", lib.func((e) => new Bar(
             prov(() => Core.bundle.format("bar.powerlines", e.getLinks().size, LINK_LIMIT)),
             prov(() => Pal.items),
             floatp(() => e.getLinks().size / LINK_LIMIT)
@@ -233,7 +233,7 @@ blockType.buildType = prov(() => {
         updateTile() {
             let hasItem = false;
             if (timer.get(1, FRAME_DELAY)) {
-                if (itemType != null && (consValid = this.consValid())) {
+                if (itemType != null && (consValid = this.efficiency > 0)) {
                     let max = links.size;
                     for (let i = 0; i < Math.min(MAX_LOOP, max); i++) {
                         let index = looper.next(max);
@@ -309,7 +309,7 @@ blockType.buildType = prov(() => {
                             }
                         }));
                         map.each(lib.cons2((item, amount) => {
-                            l.image(item.icon(Cicon.small)).padRight(3.0);
+                            l.image(item.uiIcon).padRight(3.0);
                             l.label(prov(() => '  ' + Strings.fixed(seq.contains(item) ? amount : 0, 0))).color(Color.lightGray);
                             l.row();
                         }));
@@ -351,7 +351,7 @@ blockType.buildType = prov(() => {
             }
             Drawf.dashCircle(this.x, this.y, range, Pal.accent);
         },
-        onConfigureTileTapped(other) {
+        onConfigureBuildTapped(other) {
             if (this == other) {
                 this.configure(-1);
                 return false;

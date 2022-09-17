@@ -14,13 +14,16 @@ function createDpsWall() {
                 this.displays.splice(index, 1)
             }
         },
-        damage(amount, withEffect) {
-            if (withEffect === undefined) {
+        damage(v1, v2, v3) {
+            if (v2 === undefined && v3 === undefined) {
+                let amount = v1
                 for (let display of this.displays) {
                     display.recordDamage(this, amount)
                 }
+            } else if (v3 === undefined) {
+                this.super$damage(v1, v2)
             } else {
-                this.super$damage(amount, withEffect)
+                this.super$damage(v1, v2, v3)
             }
         },
         write(writer) {
@@ -118,7 +121,17 @@ DpsWallDisplay.configClear(tile => {
 });
 
 function isDpsWall(entity) {
-    return entity && entity.block.name.indexOf("dps-wall-") >= 0
+    return entity && (
+        entity.block.name.indexOf("dps-wall-1") >= 0
+        ||
+        entity.block.name.indexOf("dps-wall-2") >= 0
+        ||
+        entity.block.name.indexOf("dps-wall-3") >= 0
+        ||
+        entity.block.name.indexOf("dps-wall-4") >= 0
+        ||
+        entity.block.name.indexOf("dps-wall-5") >= 0
+    )
 }
 function linkValid(the, pos) {
     if (pos === undefined || pos === null || pos == -1) return false;
@@ -196,7 +209,7 @@ lib.setBuilding(DpsWallDisplay, (block) => new JavaAdapter(Wall.WallBuild, {
         }
         Drawf.dashCircle(this.x, this.y, range, Pal.accent);
     },
-    onConfigureTileTapped(other) {
+    onConfigureBuildTapped(other) {
         if (this == other) {
             return false;
         }
@@ -243,11 +256,14 @@ lib.setBuilding(DpsWallDisplay, (block) => new JavaAdapter(Wall.WallBuild, {
             Draw.reset()
         }
     },
-    damage(amount, withEffect) {
-        if (withEffect === undefined) {
+    damage(v1, v2, v3) {
+        if (v2 === undefined && v3 === undefined) {
+            let amount = v1
             this.recordDamage(this, amount)
+        } else if (v3 === undefined) {
+            this.super$damage(v1, v2)
         } else {
-            this.super$damage(amount, withEffect)
+            this.super$damage(v1, v2, v3)
         }
     },
     write(write) {

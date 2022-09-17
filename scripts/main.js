@@ -15,7 +15,7 @@ require('super-cheat/quantum-launchpad')
 require('super-cheat/adjustable-overdrive-projector')
 require('super-cheat/chrono-unloader')
 require('super-cheat/chrono-pusher')
-require('super-cheat/turret-turret')
+// require('super-cheat/turret-turret')
 require('super-cheat/dps-tester-unit')
 require('super-cheat/dps-walls')
 require('super-cheat/unit-factory')
@@ -23,7 +23,7 @@ require('super-cheat/team-changer')
 
 // Events.on(EventType.ClientLoadEvent, cons(e => {
 
-//     Icon.trash = new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find("invincible-cheat-mod-v6-must-die-turret", Core.atlas.find("clear")))
+//     Icon.trash = new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find("invincible-cheat-mod-v7-must-die-turret", Core.atlas.find("clear")))
 //     Icon.icons.put("trash", Icon.trash);
 
 //     Vars.ui.settings = new SettingsMenuDialog();

@@ -16,7 +16,7 @@ exports.loadSound = function (name, setter) {
     });
 }
 
-exports.modName = "invincible-cheat-mod-v6";
+exports.modName = "invincible-cheat-mod-v7";
 
 exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 
@@ -27,19 +27,11 @@ exports.func = (getter) => new Func({
     get: getter
 });
 
-const loadRegionCache = {};
 exports.loadRegion = (name) => {
     if (Vars.headless === true) {
         return null
     }
-    var c = loadRegionCache[name]
-    if (c) {
-        return c
-    }
-    c = Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("error"))
-    // print('find ' + exports.modName + '-' + name + ' result: ' + c)
-    loadRegionCache[name] = c
-    return c
+    return Core.atlas.find(exports.modName + '-' + name, "error")
 };
 
 /**

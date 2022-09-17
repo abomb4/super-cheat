@@ -1,6 +1,6 @@
 var lib = require('super-cheat/lib');
 
-const block = extendContent(Drill, "static-drill", {});
+const block = extend(Drill, "static-drill", {});
 lib.setBuildingSimple(block, Drill.DrillBuild, {
     dump(item) {
         if (item) {

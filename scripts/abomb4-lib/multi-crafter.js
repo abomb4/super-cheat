@@ -416,14 +416,14 @@
                }));
            },
            setBars() {
-               this.bars.add("health", func(e => new Bar("stat.health", Pal.health, floatp(() => e.healthf())).blink(Color.white)));
+               this.barMap.put("health", func(e => new Bar("stat.health", Pal.health, floatp(() => e.healthf())).blink(Color.white)));
 
                if (this.hasPower && this.consumes.hasPower()) {
                    var cons = this.consumes.getPower();
                    var buffered = cons.buffered;
                    var capacity = cons.capacity;
 
-                   this.bars.add("power", func(entity => new Bar(
+                   this.barMap.put("power", func(entity => new Bar(
                        prov(() => buffered ? Core.bundle.format("bar.poweramount", Float.isNaN(entity.power.status * capacity) ? "<ERROR>" : parseInt(entity.power.status * capacity)) : Core.bundle.get("bar.power")),
                        prov(() => Pal.powerBar),
                        floatp(() => Mathf.zero(cons.requestedPower(entity)) && entity.power.graph.getPowerProduced() + entity.power.graph.getBatteryStored() > 0 ? 1 : entity.power.status)
@@ -434,7 +434,7 @@
                if (liquids && liquids.size > 0) {
                    liquids.forEach(liquid => {
                        ((liquid) => {
-                           this.bars.add(liquid.name, func((e) => new Bar(
+                           this.barMap.put(liquid.name, func((e) => new Bar(
                                // prov(() => liquid.localizedName + ": " + UI.formatAmount(e.liquids.get(liquid)) + ' / ' + UI.formatAmount(e.block.liquidapacity)),
                                // prov(() => Color.acid),
                                liquid.localizedName,
@@ -504,7 +504,7 @@
                //                     }
                //                 }));
                //                 map.each(cons2((item, amount) => {
-               //                     l.image(item.icon(Cicon.small)).padRight(3.0);
+               //                     l.image(item.uiIcon).padRight(3.0);
                //                     l.label(prov(() => '  ' + Strings.fixed(seq.contains(item) ? amount : 0, 0))).color(Color.lightGray);
                //                     l.row();
                //                 }));

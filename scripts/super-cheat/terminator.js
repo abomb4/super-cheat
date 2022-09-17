@@ -306,13 +306,13 @@ const superWeapon = makeGroupWeapon(terminatorMainWeapon, []);
 
 const terminator = (() => {
 
-    // const unit = extendContent(UnitType, 'terminator-unit', {
+    // const unit = extend(UnitType, 'terminator-unit', {
     //     load() {
     //         this.weapon = superHealBeamShotgunWeapon;
     //         this.super$load();
     //     },
     // });
-    const unit = extendContent(UnitType, 'terminator-unit', {
+    const unit = extend(UnitType, 'terminator-unit', {
         load() {
             this.create(prov(() => new GroundUnit()));
             // this.weapon = terminatorMainWeapon;

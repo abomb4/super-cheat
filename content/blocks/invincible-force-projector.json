@@ -7,7 +7,7 @@
     "hasPower": false,
     "consumes": {
         "items": {
-            "items": [{ "item": "copper", "amount": 1 }],
+            "items": [{ "item": "graphite", "amount": 1 }],
             "booster": true
         }
     },

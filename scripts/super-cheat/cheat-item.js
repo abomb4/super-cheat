@@ -1,6 +1,6 @@
 var lib = require('super-cheat/lib');
 
-var itemSource = extendContent(ItemSource, 'cheat-item', {});
+var itemSource = extend(ItemSource, 'cheat-item', {});
 lib.setBuildingSimple(itemSource, ItemSource.ItemSourceBuild, {
     dump(item) {
         var count = 36;
@@ -11,7 +11,7 @@ lib.setBuildingSimple(itemSource, ItemSource.ItemSourceBuild, {
     },
 });
 
-var powerSource = extendContent(PowerSource, 'cheat-power', {});
+var powerSource = extend(PowerSource, 'cheat-power', {});
 lib.setBuildingSimple(powerSource, PowerSource.PowerSourceBuild, {
     getPowerProduction(tile) {
         return this.enabled ? 10000000000 : 0;
