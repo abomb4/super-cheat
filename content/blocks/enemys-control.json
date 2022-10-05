@@ -5,16 +5,9 @@
     "hasLiquids": false,
     "hasPower": false,
     "update": true,
-    "radius": 180,
-    "consumes": {
-        "items": {
-            "items": [{ "item": "graphite", "amount": 1 }],
-            "booster": true
-        }
-    },
+    "radius": 210,
     "requirements": [
     ],
     "category": "effect",
-    "research": "enemys-no-damage",
-    "buildTime": "0"
+    "research": "enemys-no-damage"
 }

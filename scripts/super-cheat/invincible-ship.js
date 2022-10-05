@@ -45,12 +45,7 @@ const invincibleBulletType = (() => {
     const bt = extend(BasicBulletType, {
         hitEntity(b, other, initialHealth) {
             if (other && other.kill) {
-                other.kill();
-                if (!other.dead && !Vars.net.client()) {
-                    other.health = 0
-                    other.dead = true
-                    Call.unitDeath(other.id)
-                }
+                Call.unitDestroy(other.id)
             }
         },
         hitTile(b, tile, x, y, health, direct)  {
@@ -63,11 +58,12 @@ const invincibleBulletType = (() => {
 
     bt.damage = Infinity;
     bt.splashDamage = Infinity;
-    bt.speed = 4;
-    bt.bulletWidth = 7;
-    bt.bulletHeight = 9;
-    bt.lifetime = 140;
-    bt.inaccuracy = 5;
+    bt.speed = 24.1;
+    bt.hitSize = 5;
+    bt.width = 7;
+    bt.height = 35;
+    bt.lifetime = 10;
+    bt.inaccuracy = 0;
     bt.despawnEffect = Fx.hitBulletSmall;
     bt.keepVelocity = false;
     return bt;

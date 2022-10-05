@@ -11,6 +11,5 @@
     "consumes": {},
     "requirements": [],
     "category": "effect",
-    "research": "chrono-vault",
-    "buildTime": "0"
+    "research": "chrono-vault"
 }

@@ -148,7 +148,7 @@ const healed = new IntSet();
                         if (speedBoost <= other.timeScale) {
                             other.timeScaleDuration = Math.max(other.timeScaleDuration, duration);
                         }
-                        other.timeScale = Math.min(other.timeScale, speedBoost);
+                        other.applySlowdown(speedBoost, duration);
                     } else {
                         other.applyBoost(speedBoost, duration);
                     }

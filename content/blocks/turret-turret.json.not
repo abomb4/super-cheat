@@ -2,7 +2,6 @@
     "category": "turret",
     "health": 6000,
     "size": 4,
-    "reloadTime": 10,
     "range": 570,
     "inaccuracy": 15,
     "rotateSpeed": 20,
@@ -10,6 +9,5 @@
     "shootCone": 80,
     "shootSound": "shoot",
     "requirements": [],
-    "research": "must-die-turret",
-    "buildTime": "0"
+    "research": "must-die-turret"
 }

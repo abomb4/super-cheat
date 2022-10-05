@@ -5,6 +5,5 @@
     "update": true,
     "solid": true,
     "category": "defense",
-    "research": "dps-wall-2",
-    "buildTime": "0"
+    "research": "dps-wall-2"
 }

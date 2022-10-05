@@ -2,6 +2,8 @@
 require('super-cheat/lib')
 require('super-cheat/cheat-item')
 require('super-cheat/must-die-turret')
+require('super-cheat/one-shot-turret')
+require('super-cheat/point-turret')
 require('super-cheat/enemys-cannot-move')
 require('super-cheat/enemys-control')
 require('super-cheat/enemys-no-damage')

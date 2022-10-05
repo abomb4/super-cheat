@@ -1,5 +1,5 @@
-name: "Invincible Cheat Mod v7"
 displayName: (v7) Invincible Cheat 无敌作弊
+name: "Invincible Cheat Mod v7"
 author: 滞人
 description: '''
 This is a [red]cheat[] mod, abuse will reduce your game experience, be careful for using this.
@@ -43,5 +43,5 @@ Features:
 - Дистанционный загрузчик и разгрузчик
 - Универсальный завод боевых единиц, также может производить их для врагов
 '''
-version: 3.0.0
+version: 3.1.0
 minGameVersion: 136

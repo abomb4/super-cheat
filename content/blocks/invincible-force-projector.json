@@ -5,15 +5,9 @@
     "targetable": false,
     "hasLiquids": false,
     "hasPower": false,
-    "consumes": {
-        "items": {
-            "items": [{ "item": "graphite", "amount": 1 }],
-            "booster": true
-        }
-    },
+    "radius": 210,
     "requirements": [
     ],
     "category": "effect",
-    "research": "cheat-power",
-    "buildTime": "0"
+    "research": "cheat-power"
 }

@@ -24,7 +24,8 @@ const destoryBeamBulletType = (() => {
         const bt = extend(BasicBulletType, {
             hitEntity(b, other, initialHealth) {
                 if (other && other.kill) {
-                    other.kill();
+                    // other.kill();
+                    Call.unitDestroy(other.id)
                 }
             },
             hitTile(b, tile, x, y, health, direct) {

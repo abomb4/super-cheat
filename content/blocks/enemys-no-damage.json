@@ -2,19 +2,13 @@
     "health": 2000,
     "size": 3,
     "solid": true,
+    "targetable": false,
     "hasLiquids": false,
     "hasPower": false,
     "update": true,
-    "radius": 180,
-    "consumes": {
-        "items": {
-            "items": [{ "item": "graphite", "amount": 1 }],
-            "booster": true
-        }
-    },
+    "radius": 210,
     "requirements": [
     ],
     "category": "effect",
-    "research": "enemys-cannot-move",
-    "buildTime": "0"
+    "research": "enemys-cannot-move"
 }

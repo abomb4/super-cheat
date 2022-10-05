@@ -22,6 +22,5 @@
     "liquidCapacity": 1,
     "requirements": [],
     "category": "production",
-    "research": "cheat-item",
-    "buildTime": "0"
+    "research": "cheat-item"
 }

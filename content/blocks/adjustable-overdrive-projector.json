@@ -2,9 +2,9 @@
     "health": 2500,
     "size": 2,
     "hasPower": false,
+    "targetable": false,
     "consumes": {},
     "requirements": [],
     "category": "effect",
-    "research": "ultra-overdrive",
-    "buildTime": "0"
+    "research": "ultra-overdrive"
 }

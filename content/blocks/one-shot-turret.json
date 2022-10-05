@@ -1,0 +1,20 @@
+{
+    "category": "turret",
+    "size": 2,
+    "health": 6000,
+    "range": 600,
+    "reload": 30,
+    "inaccuracy": 0,
+    "rotateSpeed": 22,
+    "targetInterval": 0,
+    "shootCone": 2,
+    "shootSound": "shootBig",
+    "consumes": {
+        "coolant": {
+            "amount": 6
+        }
+    },
+    "coolantMultiplier": 0.8333333,
+    "requirements": [],
+    "research": "must-die-turret"
+}

@@ -5,6 +5,5 @@
     "update": true,
     "solid": true,
     "category": "defense",
-    "research": "dps-tester-land-factory",
-    "buildTime": "0"
+    "research": "dps-tester-land-factory"
 }

@@ -8,6 +8,5 @@
     "itemCapacity": 100000,
     "requirements": [],
     "category": "effect",
-    "research": "cheat-item",
-    "buildTime": "0"
+    "research": "cheat-item"
 }
