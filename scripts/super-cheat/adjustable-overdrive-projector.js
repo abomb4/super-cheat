@@ -112,7 +112,7 @@ const healed = new IntSet();
                 }
             },
             drawLight(){
-                Drawf.light(this.team, this.x, this.y, 50 * this.efficiency(), baseColor, 0.7 * this.efficiency());
+                Drawf.light(this.team, this.x, this.y, 50 * this.efficiency, baseColor, 0.7 * this.efficiency);
             },
             drawSelect(){
                 var realRange = range;

@@ -15,7 +15,7 @@ lib.setBuildingSimple(blockType, LaunchPad.LaunchPadBuild, {
         var timeScale = this.timeScale;
 
         //launch when full and base conditions are met
-        if (items.total() >= itemCapacity && efficiency() >= 1 && timer(timerLaunch, launchTime / timeScale)) {
+        if (items.total() >= itemCapacity && efficiency >= 1 && timer(timerLaunch, launchTime / timeScale)) {
             var entity = LaunchPayload.create();
             items.each((item, amount) => entity.stacks.add(new ItemStack(item, amount * evilNumber)));
             entity.set(this);
