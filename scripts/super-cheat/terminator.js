@@ -169,7 +169,7 @@ const terminatorMainWeapon = (() => {
     w.shake = 0.5;
     w.recoil = 2;
     w.alternate = true;
-    w.shootSound = Sounds.shootBig;
+    w.shootSound = Sounds.shootSpectre;
     w.ejectEffect = Fx.shellEjectMedium;
     w.shootEffect = Fx.shootBig;
     return w;

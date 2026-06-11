@@ -6,7 +6,7 @@
     "rotateSpeed": 20,
     "targetInterval": 0,
     "shootCone": 80,
-    "shootSound": "shootBig",
+    "shootSound": "shootSpectre",
     "requirements": [],
     "research": "cheat-item"
 }

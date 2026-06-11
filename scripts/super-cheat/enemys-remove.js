@@ -26,30 +26,10 @@ lib.setBuildingSimple(blockType, ForceProjector.ForceBuild, {
         }
 
         this.warmup = Mathf.lerpDelta(this.warmup, this.efficiency, 0.1);
-
-        if (this.buildup > 0) {
-            var scale = !this.broken ? cooldownNormal : this.cooldownBrokenBase;
-            var cons = this.block.consumes.get(ConsumeType.liquid);
-            if (cons.valid(this)) {
-                cons.update(this);
-                scale *= (cooldownLiquid * (1 + (this.liquids.current().heatCapacity - 0.4) * 0.9));
-            }
-
-            this.buildup -= delta() * scale;
-        }
-
-        if (this.broken && this.buildup <= 0) {
-            this.broken = false;
-        }
-
-        if (this.buildup >= this.breakage + this.phaseShieldBoost && !this.broken) {
-            this.broken = true;
-            this.buildup = this.breakage;
-            Fx.shieldBreak.at(this.x, this.y, this.realRadius(), this.team.color);
-        }
+        this.broken = false;
 
         if (this.hit > 0) {
-            this.hit -= 1 / 5 * Time.delta;
+            this.hit = 0;
         }
 
         var realRadius = this.realRadius();

@@ -10,13 +10,17 @@ const block = extend(CoreBlock, "team-changer", {
 
     drawPlace(x, y, rotation, valid) {},
 });
+// Fix: Block.icons() skips teamRegion for mod blocks (minfo.mod != null),
+// causing the small icon to only show the base without the upper pattern.
+// Use fullOverride to point to the mod-provided full sprite instead.
+block.fullOverride = lib.modName + "-team-changer-full";
 // block.config(java.lang.Integer, lib.cons2((tile, i) => {
 //     tile.team = Team.get(i);
 // }));
 
 const allTeams = [
     Team.derelict, Team.sharded, Team.crux,
-    Team.green, Team.blue,
+    Team.green, Team.blue, Team.malis
 ];
 lib.setBuildingSimple(block, CoreBlock.CoreBuild, {
     damage(damage) {  },

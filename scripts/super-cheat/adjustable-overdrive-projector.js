@@ -55,7 +55,7 @@ const healed = new IntSet();
         },
         drawPlace(x, y, rotation, valid) {
             const tilesize = Vars.tilesize;
-            Drawf.dashCircle(x * tilesize + this.offset, y * tilesize + this.offset, range, Pal.accent);
+            Drawf.dashSquare(baseColor, x * tilesize + this.offset, y * tilesize + this.offset, range * 2);
         },
     });
     blockType.update = true;
@@ -116,12 +116,12 @@ const healed = new IntSet();
             },
             drawSelect(){
                 var realRange = range;
-                Vars.indexer.eachBlock(this, realRange, boolf(other => other.block.canOverdrive), cons(other => {
+                Vars.indexer.eachBlock(this.team, Tmp.r1.setCentered(this.x, this.y, realRange * 2), boolf(other => other.block.canOverdrive), cons(other => {
                     var tmp = Tmp.c1.set(baseColor);
                     tmp.a = Mathf.absin(4, 1);
                     Drawf.selected(other, tmp);
                 }));
-                Drawf.dashCircle(this.x, this.y, realRange, baseColor);
+                Drawf.dashSquare(baseColor, this.x, this.y, realRange * 2);
             },
             draw(){
                 this.super$draw();
@@ -143,7 +143,7 @@ const healed = new IntSet();
             updateTile() {
                 const speedBoost = getSpeedToDecimal();
                 const duration = reload + 1;
-                Vars.indexer.eachBlock(this, range, boolf(other => true), cons(other => {
+                Vars.indexer.eachBlock(this.team, Tmp.r1.setCentered(this.x, this.y, range * 2), boolf(other => true), cons(other => {
                     if (speedBoost < 1) {
                         if (speedBoost <= other.timeScale) {
                             other.timeScaleDuration = Math.max(other.timeScaleDuration, duration);

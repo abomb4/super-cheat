@@ -8,7 +8,7 @@
     "rotateSpeed": 22,
     "targetInterval": 0,
     "shootCone": 2,
-    "shootSound": "shootBig",
+    "shootSound": "shootSpectre",
     "consumes": {
         "coolant": {
             "amount": 6
