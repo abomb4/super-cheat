@@ -1,5 +1,16 @@
 const lib = require('super-cheat/lib');
 
+// ══════════════════════════════════════════════════════════════════════
+//  smart-filler — 智能填充方块
+//
+//  警告：此方块深度依赖 Mindustry 内部 API（类层次 instanceof、
+//  Java 字段反射式访问、Build 嵌套类引用等）。每个版本更新都有
+//  较高概率因类名/继承关系/字段名变动而直接挂掉。
+//
+//  如果更新后发现不工作，请先检查 Mindustry 的 crash report 中
+//  的 "Likely Cause" 是否指向 smart-filler.js。
+// ══════════════════════════════════════════════════════════════════════
+
 const range = 27;
 const baseColor = Pal.reactorPurple;
 const tilesize = Vars.tilesize;
@@ -15,18 +26,89 @@ const bestGeneratorFuelMap = {};    // ConsumeGenerator block → { item: Item, 
 const bestGeneratorLiquidMap = {};  // ConsumeGenerator block → { liquid: Liquid, score: float }
 
 // ── BulletType DPS estimation ──
-function calcTurretDps(turretBlock, bulletType) {
-    var baseDps = bulletType.estimateDPS();
-    // Add lightning damage (not included in estimateDPS)
+// 溅射半径倍率: 3格(24px)=100%, 6格(48px)=200%, 12格(96px)=300%
+function splashRadiusMult(radiusPx) {
+    if (radiusPx <= 0) return 0;
+    var tiles = radiusPx / 8;
+    if (tiles < 3) return tiles / 3;
+    return 1 + Math.log(tiles / 3) / Math.LN2;
+}
+// 闪电长度倍率: <10=100%, 20=200%, 40=300%
+function lightningLengthMult(length) {
+    if (length <= 0 || length < 10) return 1;
+    return 1 + Math.log(length / 10) / Math.LN2;
+}
+// 穿透倍率: 2→200%, 4→200%, 8→300%（递减收益）
+function pierceMult(pierce) {
+    if (pierce <= 4) return 2.0;
+    return 2.0 + (pierce - 4) / 4;
+}
+
+// ── 递归计算弹药有效伤害（含穿透/碎片/闪电/spawnUnit嵌套）──
+// ammoMultiplier 不计入：它只决定每物品能打几发，不改变单发伤害
+function calcBulletEffectiveDamage(bulletType, visited) {
+    if (bulletType == null) return 0;
+    if (visited == null) visited = [];
+    if (visited.indexOf(bulletType) >= 0) return 0;
+    visited.push(bulletType);
+
+    // ── 本弹药的原始伤害分量 ──
+    var direct = bulletType.damage;
+    var splash = 0;
+    var lightning = 0;
+    var frag = 0;
+
+    if (bulletType.splashDamage > 0 && bulletType.splashDamageRadius > 0) {
+        splash = bulletType.splashDamage * splashRadiusMult(bulletType.splashDamageRadius);
+    }
     if (bulletType.lightning > 0) {
         var lDmg = bulletType.lightningDamage < 0 ? bulletType.damage : bulletType.lightningDamage;
-        baseDps += bulletType.lightning * lDmg * 0.1;
+        lightning = bulletType.lightning * lDmg * lightningLengthMult(bulletType.lightningLength);
     }
-    // Factor in reload and bulletType.reloadMultiplier
+    if (bulletType.fragBullet != null && bulletType.fragBullets > 0) {
+        var fragEff = calcBulletEffectiveDamage(bulletType.fragBullet, visited);
+        frag = fragEff * bulletType.fragBullets * 0.3;
+    }
+
+    // ── 本弹药的穿透（只对自身分量生效） ──
+    var rawTotal = direct + splash + lightning + frag;
+    if (bulletType.pierce) {
+        var p = bulletType.pierceCap > 0 ? bulletType.pierceCap : 2;
+        var pierceable = direct * 0.2 + (splash + lightning + frag) * 0.5;
+        rawTotal += pierceable * (pierceMult(p) - 1);
+    }
+
+    // ── spawnUnit 导弹嵌套（独立于本弹药穿透，递归展开） ──
+    var spawnDmg = 0;
+    if (bulletType.spawnUnit != null) {
+        if (bulletType.spawnUnit.deathExplosion != null) {
+            spawnDmg += calcBulletEffectiveDamage(bulletType.spawnUnit.deathExplosion, visited);
+        }
+        var weapons = bulletType.spawnUnit.weapons;
+        if (weapons != null && weapons.size > 0) {
+            for (var wi = 0; wi < weapons.size; wi++) {
+                var w = weapons.get(wi);
+                if (w.bullet != null) {
+                    spawnDmg += calcBulletEffectiveDamage(w.bullet, visited);
+                }
+            }
+        }
+    }
+
+    return rawTotal + spawnDmg;
+}
+
+function calcTurretDps(turretBlock, bulletType) {
+    // 递归计算弹药有效伤害（穿透/碎片/闪电/spawnUnit 都已计入）
+    var effectiveDmg = calcBulletEffectiveDamage(bulletType);
+
+    // 注意：ammoMultiplier 不乘算伤害，只决定每物品能打几发（弹药经济）
+
+    // ── 转换为DPS（考虑射速） ──
     var reloadTicks = turretBlock.reload;
     if (reloadTicks <= 0) reloadTicks = 1;
     var shotsPerSec = 60 / reloadTicks * bulletType.reloadMultiplier;
-    return baseDps * shotsPerSec;
+    return effectiveDmg * shotsPerSec;
 }
 
 // ── Find best coolant for a ConsumeLiquidBase ──
@@ -81,8 +163,8 @@ Events.on(EventType.ContentInitEvent, cons(e => {
             if (bestItem != null) bestItemTurretAmmoMap[block.id] = { item: bestItem, dps: bestDps };
         }
 
-        // ── LiquidTurret best ammo ──
-        if (block instanceof LiquidTurret) {
+        // ── LiquidTurret / ContinuousLiquidTurret best ammo ──
+        if (block instanceof LiquidTurret || block instanceof ContinuousLiquidTurret) {
             var bestLiquid = null;
             var bestDps = -1;
             var li = content.liquids().iterator();
@@ -185,6 +267,106 @@ function fillItem(b, item, capacity) {
     if (fill > 0) b.items.add(item, fill);
 }
 
+// ── Lazy cache rebuild: compute on first access if cache miss ──
+// Note: Data patches modify block properties directly, so cache rebuild uses current block state.
+// We don't clear caches on WorldLoadEvent to avoid crashes during map loading.
+function rebuildCacheForBlock(block) {
+    // ItemTurret best ammo
+    if (block instanceof ItemTurret) {
+        var bestItem = null, bestDps = -1;
+        var ii = content.items().iterator();
+        while (ii.hasNext()) {
+            var item = ii.next();
+            var bullet = block.ammoTypes.get(item);
+            if (bullet == null) continue;
+            var dps = calcTurretDps(block, bullet);
+            if (dps > bestDps) { bestDps = dps; bestItem = item; }
+        }
+        if (bestItem != null) bestItemTurretAmmoMap[block.id] = { item: bestItem, dps: bestDps };
+    }
+
+    // LiquidTurret / ContinuousLiquidTurret best ammo
+    if (block instanceof LiquidTurret || block instanceof ContinuousLiquidTurret) {
+        var bestLiquid = null, bestDps = -1;
+        var li = content.liquids().iterator();
+        while (li.hasNext()) {
+            var liquid = li.next();
+            var bullet = block.ammoTypes.get(liquid);
+            if (bullet == null) continue;
+            var dps = calcTurretDps(block, bullet);
+            if (dps > bestDps) { bestDps = dps; bestLiquid = liquid; }
+        }
+        if (bestLiquid != null) bestLiquidTurretAmmoMap[block.id] = { liquid: bestLiquid, dps: bestDps };
+    }
+
+    // Turret coolant
+    if (block instanceof BaseTurret && block.coolant != null) {
+        var cool = findBestCoolant(block.coolant);
+        if (cool != null) bestCoolantMap[block.id] = cool;
+    }
+
+    // ConsumeGenerator best fuel
+    if (block instanceof ConsumeGenerator) {
+        var filterItem = block.findConsumer(boolf(c => c instanceof ConsumeItemFilter));
+        var filterLiquid = block.findConsumer(boolf(c => c instanceof ConsumeLiquidFilter));
+        var powerProd = block.powerProduction;
+
+        if (filterItem != null) {
+            var bestFuel = null, bestScore = -1;
+            var ii = content.items().iterator();
+            while (ii.hasNext()) {
+                var item = ii.next();
+                if (!filterItem.filter.get(item)) continue;
+                var effMult = 1;
+                if (filterItem instanceof ConsumeItemEfficiency) {
+                    effMult = filterItem.itemEfficiencyMultiplier(item);
+                }
+                var score = powerProd * effMult;
+                if (score > bestScore) { bestScore = score; bestFuel = item; }
+            }
+            if (bestFuel != null) bestGeneratorFuelMap[block.id] = { item: bestFuel, score: bestScore };
+        }
+
+        if (filterLiquid != null) {
+            var bestLiq = null, bestScore = -1;
+            var li = content.liquids().iterator();
+            while (li.hasNext()) {
+                var liquid = li.next();
+                if (!filterLiquid.filter.get(liquid)) continue;
+                var effMult = 1;
+                if (typeof filterLiquid.liquidEfficiencyMultiplier === 'function') {
+                    effMult = filterLiquid.liquidEfficiencyMultiplier(liquid);
+                }
+                var score = powerProd * effMult;
+                if (score > bestScore) { bestScore = score; bestLiq = liquid; }
+            }
+            if (bestLiq != null) bestGeneratorLiquidMap[block.id] = { liquid: bestLiq, score: bestScore };
+        }
+    }
+
+    // Non-turret coolant
+    if (!(block instanceof BaseTurret)) {
+        var consumers = block.nonOptionalConsumers;
+        for (var ci = 0; ci < consumers.length; ci++) {
+            if (consumers[ci] instanceof ConsumeCoolant) {
+                var cool = findBestCoolant(consumers[ci]);
+                if (cool != null) bestCoolantMap[block.id] = cool;
+                break;
+            }
+        }
+        if (bestCoolantMap[block.id] == null) {
+            var optCons = block.optionalConsumers;
+            for (var ci = 0; ci < optCons.length; ci++) {
+                if (optCons[ci] instanceof ConsumeCoolant) {
+                    var cool = findBestCoolant(optCons[ci]);
+                    if (cool != null) bestCoolantMap[block.id] = cool;
+                    break;
+                }
+            }
+        }
+    }
+}
+
 // ── Helper: process a single consumer and fill accordingly ──
 function fillConsumer(filler, b, con) {
     var block = b.block;
@@ -222,6 +404,7 @@ function fillConsumer(filler, b, con) {
         // Filtered items — for generators use cached best fuel, otherwise fill all that pass
         if (b instanceof ConsumeGenerator.ConsumeGeneratorBuild) {
             var fuelInfo = bestGeneratorFuelMap[block.id];
+            if (fuelInfo == null) { rebuildCacheForBlock(block); fuelInfo = bestGeneratorFuelMap[block.id]; }
             if (fuelInfo != null) fillItem(b, fuelInfo.item);
         } else if (b instanceof ImpactReactor.ImpactReactorBuild) {
             // ImpactReactor: fill all explosive items
@@ -270,6 +453,7 @@ function fillConsumer(filler, b, con) {
         var cool = bestCoolantMap[block.id];
         if (cool == null) {
             cool = findBestCoolant(con);
+            if (cool == null) { rebuildCacheForBlock(block); cool = bestCoolantMap[block.id]; }
             if (cool != null) bestCoolantMap[block.id] = cool;
         }
         fillLiquid(filler, b, cool);
@@ -278,6 +462,7 @@ function fillConsumer(filler, b, con) {
         // Generic liquid filter — for generators use cached best, otherwise best heatCapacity
         if (b instanceof ConsumeGenerator.ConsumeGeneratorBuild) {
             var liqInfo = bestGeneratorLiquidMap[block.id];
+            if (liqInfo == null) { rebuildCacheForBlock(block); liqInfo = bestGeneratorLiquidMap[block.id]; }
             if (liqInfo != null) fillLiquid(filler, b, liqInfo.liquid);
         } else {
             var cool = bestCoolantMap[block.id];
@@ -309,11 +494,13 @@ function fillBuilding(filler, b) {
         // Fill coolant
         if (block.coolant != null) {
             var cool = getCachedCoolant(block);
+            if (cool == null) { rebuildCacheForBlock(block); cool = getCachedCoolant(block); }
             fillLiquid(filler, b, cool);
         }
         // ItemTurret: fill best ammo
         if (b instanceof ItemTurret.ItemTurretBuild) {
             var ammoInfo = bestItemTurretAmmoMap[block.id];
+            if (ammoInfo == null) { rebuildCacheForBlock(block); ammoInfo = bestItemTurretAmmoMap[block.id]; }
             if (ammoInfo != null) {
                 var item = ammoInfo.item;
                 var currentAmmo = b.totalAmmo;
@@ -330,9 +517,29 @@ function fillBuilding(filler, b) {
         if (b instanceof LiquidTurret.LiquidTurretBuild) {
             if (block.name != "wave" && block.name != "tsunami") {
                 var ammoInfo = bestLiquidTurretAmmoMap[block.id];
+                if (ammoInfo == null) { rebuildCacheForBlock(block); ammoInfo = bestLiquidTurretAmmoMap[block.id]; }
                 if (ammoInfo != null) fillLiquid(filler, b, ammoInfo.liquid);
             }
         }
+        // ContinuousLiquidTurret: fill best ammo liquid (sublimate etc.)
+        if (block instanceof ContinuousLiquidTurret) {
+            var ammoInfo = bestLiquidTurretAmmoMap[block.id];
+            if (ammoInfo == null) { rebuildCacheForBlock(block); ammoInfo = bestLiquidTurretAmmoMap[block.id]; }
+            if (ammoInfo != null) fillLiquid(filler, b, ammoInfo.liquid);
+        }
+
+        // ── Fill other liquid consumers for turrets (e.g. BuildTurret on Erekir consuming nitrogen)
+        // These turrets use consumeLiquid but aren't LiquidTurret/ItemTurret, so their liquid
+        // consumers are never reached by the generic path (which is skipped via return above).
+        // For ContinuousLiquidTurret the ammo liquid is already filled above — skip generic fill.
+        for (var ci = 0; ci < block.nonOptionalConsumers.length; ci++) {
+            var con = block.nonOptionalConsumers[ci];
+            if (con instanceof ConsumeLiquidBase && !(con instanceof ConsumeCoolant)
+                && !(block instanceof ContinuousLiquidTurret)) {
+                fillConsumer(filler, b, con);
+            }
+        }
+
         return;
     }
 
@@ -346,7 +553,7 @@ function fillBuilding(filler, b) {
                 var fill = core.storageCapacity - core.items.get(item);
                 if (fill > 0) {
                     core.items.add(item, fill);
-                    if ((net.server() || !net.active()) && b.team == state.rules.defaultTeam && state.isCampaign()) {
+                    if ((Vars.net.server() || !Vars.net.active()) && b.team == state.rules.defaultTeam && state.isCampaign()) {
                         state.rules.sector.info.handleCoreItem(item, fill);
                     }
                 }
@@ -431,35 +638,45 @@ function fillBuilding(filler, b) {
 
     if (b instanceof UnitAssembler.UnitAssemblerBuild) {
         // UnitAssembler (Erekir T4/T5)
-        var plan = b.plan();
-        if (plan != null) {
-            // Items
-            if (plan.itemReq != null) {
-                for (var i = 0; i < plan.itemReq.length; i++) {
-                    fillItem(b, plan.itemReq[i].item);
+        try {
+            var plan = b.plan();
+            if (plan != null) {
+                // Items
+                if (plan.itemReq != null) {
+                    for (var i = 0; i < plan.itemReq.length; i++) {
+                        fillItem(b, plan.itemReq[i].item);
+                    }
+                }
+                // Liquids
+                if (plan.liquidReq != null) {
+                    for (var i = 0; i < plan.liquidReq.length; i++) {
+                        fillLiquid(filler, b, plan.liquidReq[i].liquid);
+                    }
+                }
+                // Payloads
+                if (plan.requirements != null) {
+                    for (var i = 0; i < plan.requirements.size; i++) {
+                        var stack = plan.requirements.get(i);
+                        b.blocks.add(stack.item, stack.amount);
+                    }
                 }
             }
-            // Liquids
-            if (plan.liquidReq != null) {
-                for (var i = 0; i < plan.liquidReq.length; i++) {
-                    fillLiquid(filler, b, plan.liquidReq[i].liquid);
-                }
-            }
-            // Payloads
-            if (plan.requirements != null) {
-                for (var i = 0; i < plan.requirements.size; i++) {
-                    var stack = plan.requirements.get(i);
-                    b.blocks.add(stack.item, stack.amount);
-                }
-            }
+        } catch (e) {
+            // Fallback: skip plan-based filling if plan() method fails
         }
     } else if (b instanceof UnitFactory.UnitFactoryBuild) {
-        // UnitFactory (Serpulo)
-        var plan = b.plan();
-        if (plan != null && plan.requirements != null) {
-            for (var i = 0; i < plan.requirements.length; i++) {
-                fillItem(b, plan.requirements[i].item);
+        // UnitFactory (Serpulo) — uses block.plans[b.currentPlan]
+        try {
+            if (b.currentPlan != null && b.currentPlan >= 0 && b.currentPlan < block.plans.size) {
+                var plan = block.plans.get(b.currentPlan);
+                if (plan != null && plan.requirements != null) {
+                    for (var i = 0; i < plan.requirements.length; i++) {
+                        fillItem(b, plan.requirements[i].item);
+                    }
+                }
             }
+        } catch (e) {
+            // Fallback: skip plan-based filling if access fails
         }
     } else if (b instanceof Reconstructor.ReconstructorBuild) {
         // Reconstructor — has fixed requirements, but also uses ConsumeItemDynamic
