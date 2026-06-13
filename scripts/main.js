@@ -107,47 +107,4 @@ Events.on(EventType.ContentInitEvent, cons(e => {
     }
 
     // Step 3: Make overdrive/shield blocks use square range instead of circular
-    // ultra-overdrive is defined in JSON as OverdriveProjector, need to override its building methods
-    var ultraOverdrive = Vars.content.block(modNamePrefix + 'ultra-overdrive');
-    if (ultraOverdrive != null) {
-        var blockRange = ultraOverdrive.range;
-        var blockBaseColor = ultraOverdrive.baseColor;
-
-        // Override building methods via setBuildingSimple
-        lib.setBuildingSimple(ultraOverdrive, OverdriveProjector.OverdriveBuild, {
-            drawSelect() {
-                var realRange = blockRange + this.phaseHeat * ultraOverdrive.phaseRangeBoost;
-                Vars.indexer.eachBlock(this.team, Tmp.r1.setCentered(this.x, this.y, realRange * 2), boolf(other => other.block.canOverdrive), cons(other => {
-                    Drawf.selected(other, Tmp.c1.set(blockBaseColor).a(Mathf.absin(4, 1)));
-                }));
-                Drawf.dashSquare(blockBaseColor, this.x, this.y, realRange * 2);
-            },
-            updateTile() {
-                this.smoothEfficiency = Mathf.lerpDelta(this.smoothEfficiency, this.efficiency, 0.08);
-                this.heat = Mathf.lerpDelta(this.heat, this.efficiency > 0 ? 1 : 0, 0.08);
-                this.charge += this.heat * Time.delta;
-
-                if (ultraOverdrive.hasBoost) {
-                    this.phaseHeat = Mathf.lerpDelta(this.phaseHeat, this.optionalEfficiency, 0.1);
-                }
-
-                if (this.charge >= ultraOverdrive.reload) {
-                    var realRange = blockRange + this.phaseHeat * ultraOverdrive.phaseRangeBoost;
-                    this.charge = 0;
-                    Vars.indexer.eachBlock(this.team, Tmp.r1.setCentered(this.x, this.y, realRange * 2), boolf(other => other.block.canOverdrive), cons(other => {
-                        other.applyBoost(this.realBoost(), ultraOverdrive.reload + 1);
-                    }));
-                }
-
-                if (this.efficiency > 0) {
-                    this.useProgress += this.delta();
-                }
-
-                if (this.useProgress >= ultraOverdrive.useTime) {
-                    this.consume();
-                    this.useProgress %= ultraOverdrive.useTime;
-                }
-            },
-        });
-    }
 }))

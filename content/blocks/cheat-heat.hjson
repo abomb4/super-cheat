@@ -1,0 +1,10 @@
+type: HeatProducer
+health: 2000
+size: 1
+heatOutput: 1000000
+warmupRate: 1000000
+itemCapacity: 0
+alwaysUnlocked: true
+category: crafting
+requirements: []
+research: cheat-power
