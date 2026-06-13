@@ -57,6 +57,10 @@ const healed = new IntSet();
             const tilesize = Vars.tilesize;
             Drawf.dashSquare(baseColor, x * tilesize + this.offset, y * tilesize + this.offset, range * 2);
         },
+        setStats() {
+            this.super$setStats();
+            this.stats.add(Stat.range, range, StatUnit.blocks);
+        },
     });
     blockType.update = true;
     blockType.solid = true;

@@ -725,6 +725,10 @@ const blockType = extend(Block, "smart-filler", {
             Drawf.selected(t, c);
         });
     },
+    setStats() {
+        this.super$setStats();
+        this.stats.add(Stat.range, range, StatUnit.blocks);
+    },
 });
 
 blockType.buildType = prov(() => {

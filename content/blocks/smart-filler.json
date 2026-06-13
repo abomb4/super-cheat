@@ -7,7 +7,7 @@
     "targetable": true,
     "hasItems": false,
     "destructible": true,
-    "category": "distribution",
+    "category": "effect",
     "requirements": [],
     "research": "next-wave"
 }
